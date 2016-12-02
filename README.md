@@ -1,4 +1,3 @@
-**FIXME**: Ensure the badges are correct and complete, then remove this message!
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html) [![Build Status](https://travis-ci.org/simp/pupmod-simp-fips.svg)](https://travis-ci.org/simp/pupmod-simp-fips) [![SIMP compatibility](https://img.shields.io/badge/SIMP%20compatibility-4.2.*%2F5.1.*-orange.svg)](https://img.shields.io/badge/SIMP%20compatibility-4.2.*%2F5.1.*-orange.svg)
 
 #### Table of Contents
@@ -16,11 +15,12 @@
 
 ## Description
 
-**FIXME:** Ensure the *Description* section is correct and complete, then remove this message!
+This module enables Federal Information Processing Standard(FIPS) mode. FIPS Publication 140-2, is a computer security
+standard, developed by a U.S. Government and industry working group to validate the quality of cryptographic modules.
+FIPS publications (including 140-2) can be found at the following URL: http://csrc.nist.gov/publications/PubsFIPS.html.
+Enabling FIPS mode installs an integrity checking package and modifies ciphers available for applications to use.
 
-Start with a one- or two-sentence summary of what the module does and/or what problem it solves. This is your 30-second elevator pitch for your module. Consider including OS and Puppet version compatability, and any other information users will need to quickly assess the module's viability within their environment.
-
-You can give more descriptive information in a second paragraph. This paragraph should answer the questions: "What does this module *do*?" and "Why would I use it?" If your module has a range of functionality (installation, configuration, management, etc.), this is the time to mention it.
+This module manages the kernel parameters and packages required for enabling FIPS mode in CentOS and RHEL.
 
 ### This is a SIMP module
 
@@ -39,51 +39,34 @@ This module is optimally designed for use within a larger SIMP ecosystem, but it
 
 ### What fips affects
 
-**FIXME:** Ensure the *What fips affects* section is correct and complete, then remove this message!
+-----------------------------------------
+> **WARNING**
+>
+> FIPS mode disables md5 hashing at a library level. Enabling it may have unintended consequences.
+-----------------------------------------
 
-If it's obvious what your module touches, you can skip this section. For example, folks can probably figure out that your mysql_instance module affects their MySQL instances.
-
-If there's more that they should know about, though, this is the place to mention:
-
- * A list of files, packages, services, or operations that the module will alter, impact, or execute.
- * Dependencies that your module automatically installs.
- * Warnings or other important notices.
-
-### Setup Requirements **OPTIONAL**
-
-**FIXME:** Ensure the *Setup Requirements* section is correct and complete, then remove this message!
-
-If your module requires anything extra before setting up (pluginsync enabled, etc.), mention it here.
-
-If your most recent release breaks compatibility or requires particular steps for upgrading, you might want to include an additional "Upgrading" section here.
+* Kernel parameters and Grub
+* Dracut and initrd
+* Packages:
+  * nss
+  * dracut-fips
+  * fipscheck
 
 ### Beginning with fips
 
-**FIXME:** Ensure the *Beginning with fips* section is correct and complete, then remove this message!
-
-The very basic steps needed for a user to get the module up and running. This can include setup steps, if necessary, or it can be an example of the most basic use of the module.
-
-## Usage
-
-**FIXME:** Ensure the *Usage* section is correct and complete, then remove this message!
+Include the `::fips` class. By default it will enable FIPS mode, but if you'd like to ensure that FIPS mode is disabled, call the class and set `fips::enabled: false` in hiera.
 
 This section is where you describe how to customize, configure, and do the fancy stuff with your module here. It's especially helpful if you include usage examples and code samples for doing things with your module.
 
 ## Reference
 
-**FIXME:** Ensure the *Reference* section is correct and complete, then remove this message!  If there is pre-generated YARD documentation for this module, ensure the text links to it and remove references to inline documentation.
-
 Please refer to the inline documentation within each source file, or to the module's generated YARD documentation for reference material.
 
 ## Limitations
 
-**FIXME:** Ensure the *Limitations* section is correct and complete, then remove this message!
-
 SIMP Puppet modules are generally intended for use on Red Hat Enterprise Linux and compatible distributions, such as CentOS. Please see the [`metadata.json` file](./metadata.json) for the most up-to-date list of supported operating systems, Puppet versions, and module dependencies.
 
 ## Development
-
-**FIXME:** Ensure the *Development* section is correct and complete, then remove this message!
 
 Please read our [Contribution Guide](https://simp-project.atlassian.net/wiki/display/SD/Contributing+to+SIMP) and visit our [developer wiki](https://simp-project.atlassian.net/wiki/display/SD/SIMP+Development+Home).
 

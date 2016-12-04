@@ -1,9 +1,9 @@
 # Manages the enabling and disabling of FIPS
 #
 class fips (
-  Boolean $enabled = true,
-  Boolean $aesni   = $::cpuinfo and member($::cpuinfo['processor0']['flags'],'aes')
-) {
+  Boolean $enabled = $::fips::params::enabled,
+  Boolean $aesni   = $::fips::params::aesni
+) inherits fips::params {
 
   if $enabled {
     kernel_parameter {

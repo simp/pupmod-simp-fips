@@ -1,16 +1,19 @@
-# == Class fips::params
-#
-# This class is meant to be called from fips.
-# It sets variables according to platform.
+# Default paramters for the fips class
 #
 class fips::params {
-  case $::osfamily {
+  case $facts['osfamily'] {
     'RedHat': {
-      $package_name = 'fips'
-      $service_name = 'fips'
+      $enabled = true
     }
     default: {
-      fail("${::operatingsystem} not supported")
+      $enabled = false
     }
+  }
+
+  if $facts['cpuinfo'] and member($facts['cpuinfo']['processor0']['flags'], 'aes') {
+    $aesni = true
+  }
+  else {
+    $aesni = false
   }
 }

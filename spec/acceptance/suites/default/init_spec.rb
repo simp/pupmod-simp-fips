@@ -11,7 +11,6 @@ describe 'fips' do
   let(:disable_manifest) {
     <<-EOS
       class { '::fips':
-        enabled => false
       }
     EOS
   }
@@ -57,7 +56,7 @@ describe 'fips' do
 
     context 'disabling FIPS at the kernel level' do
       it 'should disable fips' do
-        set_hieradata_on(host, { 'garbage_value' => 'garbage' })
+        set_hieradata_on(host, { 'simp_options::fips' => false })
         apply_manifest_on(host, disable_manifest, :catch_failures => true)
       end
 

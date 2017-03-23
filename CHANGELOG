@@ -1,3 +1,3 @@
-YYYY-MM-DD Release 0.1.0
-- FIXME: something you did
-- FIXME: something else you did
+* Thu Mar 23 2017 Jeanne Greulich <jeanne.greulich@onyxpoint.com> - 0.1.1-0
+- change enable variable to default to simp_options::fips
+- moved check for OS family from params to init.

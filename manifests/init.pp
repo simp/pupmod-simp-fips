@@ -1,52 +1,37 @@
 # Manages the enabling and disabling of FIPS
 #
+# Warning:  FIPS mode uses a smaller crytpo set and shorter keys
+#           Changing from  non-fips mode to fips will probably
+#           require all keys and certs used by server, like the
+#           puppet server, unusable.
 class fips (
-  Boolean $enabled = $::fips::params::enabled,
+  Boolean $enabled = simplib::lookup('simp_options::fips', { 'default_value' => true }),
   Boolean $aesni   = $::fips::params::aesni
 ) inherits fips::params {
 
-  if $enabled {
-    kernel_parameter {
-      'fips':
-        value  => '1',
-        notify => Reboot_notify['fips'];
-        # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
-      'boot':
-        value  => "UUID=${::boot_dir_uuid}",
-        notify => Reboot_notify['fips'];
-        # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
-    }
-    package {
-      'dracut-fips':
-        ensure => 'latest',
-        notify => Exec['dracut_rebuild'];
-      'fipscheck':
-        ensure => 'latest'
-    }
-    if $aesni {
-      package { 'dracut-fips-aesni':
-        ensure => 'latest',
-        notify => Exec['dracut_rebuild']
+  case $facts['os']['family'] {
+    'RedHat': {
+      if $enabled {
+        include 'fips::enable'
+      }
+      else {
+        include 'fips::disable'
+      }
+
+      reboot_notify { 'fips': }
+
+      # If the NSS and dracut packages don't stay reasonably in sync, your system
+      # may not reboot.
+      package { 'nss': ensure => 'latest' }
+
+      exec { 'dracut_rebuild':
+        command     => '/sbin/dracut -f',
+        subscribe   => Package['nss'],
+        refreshonly => true
       }
     }
-  }
-  else {
-    kernel_parameter { 'fips':
-      value  => '0',
-      notify => Reboot_notify['fips']
-      # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+    default : {
+      fail('Only the RedHat family is supported by the simp fips module at this time.')
     }
-  }
-
-  reboot_notify { 'fips': }
-
-  # If the NSS and dracut packages don't stay reasonably in sync, your system
-  # may not reboot.
-  package { 'nss': ensure => 'latest' }
-
-  exec { 'dracut_rebuild':
-    command     => '/sbin/dracut -f',
-    subscribe   => Package['nss'],
-    refreshonly => true
   }
 }

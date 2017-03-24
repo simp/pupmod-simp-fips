@@ -10,12 +10,42 @@ class fips (
 ) inherits fips::params {
 
   case $facts['os']['family'] {
+
     'RedHat': {
-      if $enabled {
-        include 'fips::enable'
+
+      $fips_kernel_value = $enable ? {
+        true    => '1',
+        default => '0'
       }
-      else {
-        include 'fips::disable'
+
+      $fips_package_status = $enable ? {
+        true    => 'latest',
+        default => 'absent'
+      }
+
+      kernel_parameter {
+        'fips':
+          value  => $fips_kernel_value,
+          notify => Reboot_notify['fips'];
+          # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+        'boot':
+          value  => "UUID=${::boot_dir_uuid}",
+          notify => Reboot_notify['fips'];
+         # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+      }
+
+      package {
+        'dracut-fips':
+          ensure => $fips_package_status,
+          notify => Exec['dracut_rebuild'];
+        'fipscheck':
+          ensure => $fips_package_status
+      }
+
+      if $aesni {
+      package { 'dracut-fips-aesni':
+        ensure => $fips_package_status
+        notify => Exec['dracut_rebuild']
       }
 
       reboot_notify { 'fips': }

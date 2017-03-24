@@ -13,12 +13,12 @@ class fips (
 
     'RedHat': {
 
-      $fips_kernel_value = $enable ? {
+      $fips_kernel_value = $enabled ? {
         true    => '1',
         default => '0'
       }
 
-      $fips_package_status = $enable ? {
+      $fips_package_status = $enabled ? {
         true    => 'latest',
         default => 'absent'
       }
@@ -31,7 +31,7 @@ class fips (
         'boot':
           value  => "UUID=${::boot_dir_uuid}",
           notify => Reboot_notify['fips'];
-         # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+          # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
       }
 
       package {
@@ -43,9 +43,10 @@ class fips (
       }
 
       if $aesni {
-      package { 'dracut-fips-aesni':
-        ensure => $fips_package_status
-        notify => Exec['dracut_rebuild']
+        package { 'dracut-fips-aesni':
+          ensure => $fips_package_status,
+          notify => Exec['dracut_rebuild']
+        }
       }
 
       reboot_notify { 'fips': }

@@ -2,4 +2,4 @@
 - The simp_options::fips did not disable fips.
 - change enable variable to default to simp_options::fips
 - moved check for OS family from params to init.
-- broke out the enable and disable sections to make code more readable
+- added package remove for dracut-fips packages if fips is disabled

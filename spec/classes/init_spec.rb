@@ -52,8 +52,9 @@ describe 'fips' do
           it { is_expected.to create_reboot_notify('fips') }
         end
 
-        context 'when_disabling_fips' do
+        context 'when_disabling_fips and aes' do
           let(:facts){ facts.merge({
+            :cpuinfo => { :processor0 => { :flags => ['aes'] }},
             :boot_dir_uuid => '123-456-789'
           })}
 
@@ -66,9 +67,15 @@ describe 'fips' do
             is_expected.to create_kernel_parameter('fips').with_value('0')
             is_expected.to create_kernel_parameter('fips').that_notifies('Reboot_notify[fips]')
           }
+          it {
+            is_expected.to create_package('dracut-fips-aesni').with_ensure('absent')
+            is_expected.to create_package('dracut-fips-aesni').that_notifies('Exec[dracut_rebuild]')
+            is_expected.to create_package('dracut-fips').with_ensure('absent')
+            is_expected.to create_package('dracut-fips').that_notifies('Exec[dracut_rebuild]')
+            is_expected.to create_package('fipscheck').with_ensure('absent')
+          }
           it { is_expected.to create_reboot_notify('fips') }
         end
-
       end
     end
   end

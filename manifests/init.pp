@@ -47,6 +47,13 @@ class fips (
           ensure => $fips_package_status,
           notify => Exec['dracut_rebuild']
         }
+        # There were failures if the packages are not removed/installed in the correct
+        # order
+        if $enabled {
+          Package['dracut-fips'] -> Package['dracut-fips-aesni']
+        } else {
+          Package['dracut-fips-aesni'] -> Package['dracut-fips']
+        }
       }
 
       reboot_notify { 'fips': }

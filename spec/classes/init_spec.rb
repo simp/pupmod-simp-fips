@@ -68,7 +68,7 @@ describe 'fips' do
             is_expected.to create_kernel_parameter('fips').that_notifies('Reboot_notify[fips]')
           }
           it {
-            is_expected.to create_package('dracut-fips-aesni').with_ensure('absent')
+            is_expected.to create_package('dracut-fips-aesni').with_ensure('absent').that_comes_before('Package[dracut-fips]')
             is_expected.to create_package('dracut-fips-aesni').that_notifies('Exec[dracut_rebuild]')
             is_expected.to create_package('dracut-fips').with_ensure('absent')
             is_expected.to create_package('dracut-fips').that_notifies('Exec[dracut_rebuild]')

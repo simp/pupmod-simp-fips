@@ -5,7 +5,7 @@ test_name 'fips'
 describe 'fips' do
   let(:manifest) {
     <<-EOS
-      class { '::fips': }
+      include 'fips'
     EOS
   }
 
@@ -55,7 +55,7 @@ describe 'fips' do
       end
 
       it 'should require reboot on subsequent run' do
-        result = apply_manifest_on(host, disable_manifest, :catch_failures => true)
+        result = apply_manifest_on(host, manifest, :catch_failures => true)
         expect(result.output).to include('fips => modified')
 
         # Reboot to disable fips in the kernel
@@ -69,7 +69,7 @@ describe 'fips' do
 
       it 'should not have the dracut-fips package installed' do
         result = on(host, 'puppet resource package dracut-fips')
-        expect(result.output).to include("ensure => 'absent'")
+        expect(result.output).to match(/ensure => '(absent|purged)'/)
       end
     end
   end

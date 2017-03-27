@@ -72,7 +72,6 @@ describe 'fips' do
             is_expected.to create_package('dracut-fips-aesni').that_notifies('Exec[dracut_rebuild]')
             is_expected.to create_package('dracut-fips').with_ensure('absent')
             is_expected.to create_package('dracut-fips').that_notifies('Exec[dracut_rebuild]')
-            is_expected.to create_package('fipscheck').with_ensure('absent')
           }
           it { is_expected.to create_reboot_notify('fips') }
         end

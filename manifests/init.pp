@@ -1,9 +1,19 @@
-# Manages the enabling and disabling of FIPS
+# This module manages the enabling and disabling of FIPS on a system
+# It will set the kernel boot parametes and install/remove the dracut packages
+# and rebuild initramfs images.
 #
-# Warning:  FIPS mode uses a smaller crytpo set and shorter keys
-#           Changing from  non-fips mode to fips will probably
-#           require all keys and certs used by server, like the
-#           puppet server, unusable.
+# Changing the FIPS status of a system changes the cryptographic modules used.
+# This can affect existing keys and certificates and make them unusable.  Make
+# sure these affect are understood before changing the status.
+#
+# @param enabled
+#   If FIPS should be enable or disabled on the system.
+#
+# @param aesni
+#   NOTE: This parameter is controlled by params.pp
+#   This parameter indicates wether or not the system uses the
+#   Advanced Encryption Standard New Instructions set.
+#
 class fips (
   Boolean $enabled = simplib::lookup('simp_options::fips', { 'default_value' => true }),
   Boolean $aesni   = $::fips::params::aesni
@@ -18,6 +28,8 @@ class fips (
         default => '0'
       }
 
+      # The dracut packages need to removed/added and the image rebuilt
+      # depending on fips status or the system won't boot properly.
       $fips_package_status = $enabled ? {
         true    => 'latest',
         default => 'absent'
@@ -39,7 +51,7 @@ class fips (
           ensure => $fips_package_status,
           notify => Exec['dracut_rebuild'];
         'fipscheck':
-          ensure => $fips_package_status
+          ensure => latest
       }
 
       if $aesni {

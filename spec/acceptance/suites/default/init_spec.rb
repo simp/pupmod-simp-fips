@@ -5,14 +5,7 @@ test_name 'fips'
 describe 'fips' do
   let(:manifest) {
     <<-EOS
-      class { '::fips': }
-    EOS
-  }
-  let(:disable_manifest) {
-    <<-EOS
-      class { '::fips':
-        enabled => false
-      }
+      include 'fips'
     EOS
   }
 
@@ -57,12 +50,12 @@ describe 'fips' do
 
     context 'disabling FIPS at the kernel level' do
       it 'should disable fips' do
-        set_hieradata_on(host, { 'garbage_value' => 'garbage' })
-        apply_manifest_on(host, disable_manifest, :catch_failures => true)
+        set_hieradata_on(host, { 'simp_options::fips' => false })
+        apply_manifest_on(host, manifest, :catch_failures => true)
       end
 
       it 'should require reboot on subsequent run' do
-        result = apply_manifest_on(host, disable_manifest, :catch_failures => true)
+        result = apply_manifest_on(host, manifest, :catch_failures => true)
         expect(result.output).to include('fips => modified')
 
         # Reboot to disable fips in the kernel
@@ -72,6 +65,11 @@ describe 'fips' do
       it 'should have kernel-level FIPS disabled on reboot' do
         result = on(host, 'puppet facts find `hostname` | grep fips_enabled')
         expect(result.output).to match(/false/i)
+      end
+
+      it 'should not have the dracut-fips package installed' do
+        result = on(host, 'puppet resource package dracut-fips')
+        expect(result.output).to match(/ensure => '(absent|purged)'/)
       end
     end
   end

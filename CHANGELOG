@@ -1,5 +1,5 @@
 * Thu Mar 23 2017 Jeanne Greulich <jeanne.greulich@onyxpoint.com> - 0.1.1-0
-- The simp_options::fips did not disable fips.
-- change enable variable to default to simp_options::fips
-- moved check for OS family from params to init.
-- added package remove for dracut-fips packages if fips is disabled
+- The simp_options::fips catalyst did not disable fips; changed enable
+  variable to default to simp_options::fips
+- Moved check for OS family from params to init
+- Added package remove for dracut-fips packages if fips is disabled

@@ -40,11 +40,20 @@ class fips (
       }
 
       # This should only be present if /boot is on a separate partition
-      if $facts['boot_dir_uuid'] and ($facts['boot_dir_uuid'] != $facts['root_dir_uuid']) {
-        kernel_parameter { 'boot':
-          value  => "UUID=${facts['boot_dir_uuid']}",
-          notify => Reboot_notify['fips'];
-          # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+      if $facts['boot_dir_uuid'] and $facts['root_dir_uuid'] {
+        if ($facts['boot_dir_uuid'] == $facts['root_dir_uuid']) {
+          kernel_parameter { 'boot':
+            ensure => absent,
+            notify => Reboot_notify['fips'];
+            # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+          }
+        }
+        else {
+          kernel_parameter { 'boot':
+            value  => "UUID=${facts['boot_dir_uuid']}",
+            notify => Reboot_notify['fips'];
+            # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+          }
         }
       }
 

@@ -7,7 +7,7 @@
 # sure these affect are understood before changing the status.
 #
 # @param enabled
-#   If FIPS should be enable or disabled on the system.
+#   If FIPS should be enabled or disabled on the system.
 #
 # @param aesni
 #   NOTE: This parameter is controlled by params.pp
@@ -20,9 +20,7 @@ class fips (
 ) inherits fips::params {
 
   case $facts['os']['family'] {
-
     'RedHat': {
-
       $fips_kernel_value = $enabled ? {
         true    => '1',
         default => '0'
@@ -35,21 +33,35 @@ class fips (
         default => 'absent'
       }
 
-      kernel_parameter {
-        'fips':
-          value  => $fips_kernel_value,
-          notify => Reboot_notify['fips'];
-          # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
-        'boot':
-          value  => "UUID=${::boot_dir_uuid}",
-          notify => Reboot_notify['fips'];
-          # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+      kernel_parameter { 'fips':
+        value  => $fips_kernel_value,
+        notify => Reboot_notify['fips']
+        # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+      }
+
+      # This should only be present if /boot is on a separate partition
+      if $facts['boot_dir_uuid'] and $facts['root_dir_uuid'] {
+        if ($facts['boot_dir_uuid'] == $facts['root_dir_uuid']) {
+          kernel_parameter { 'boot':
+            ensure => absent,
+            notify => Reboot_notify['fips'];
+            # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+          }
+        }
+        else {
+          kernel_parameter { 'boot':
+            value  => "UUID=${facts['boot_dir_uuid']}",
+            notify => Reboot_notify['fips'];
+            # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+          }
+        }
       }
 
       package {
         'dracut-fips':
           ensure => $fips_package_status,
           notify => Exec['dracut_rebuild'];
+
         'fipscheck':
           ensure => latest
       }
@@ -59,11 +71,13 @@ class fips (
           ensure => $fips_package_status,
           notify => Exec['dracut_rebuild']
         }
+
         # There were failures if the packages are not removed/installed in the correct
         # order
         if $enabled {
           Package['dracut-fips'] -> Package['dracut-fips-aesni']
-        } else {
+        }
+        else {
           Package['dracut-fips-aesni'] -> Package['dracut-fips']
         }
       }
@@ -81,7 +95,7 @@ class fips (
       }
     }
     default : {
-      fail('Only the RedHat family is supported by the simp fips module at this time.')
+      fail("Only the RedHat family is supported by the ${module_name} module at this time.")
     }
   }
 }

@@ -1,3 +1,11 @@
+* Fri May 05 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.1.2-0
+- Created a work-around for an undocumented issue where /boot is not
+  on its own paritition but is added to the kernel parameters with
+  fips=1. This situation ends up creating a kernel panic on the
+  system until the boot= entry is removed from the kernel boot line.
+- Added tests against GCE since that is the default image configuration
+  on those systems.
+
 * Thu Mar 23 2017 Jeanne Greulich <jeanne.greulich@onyxpoint.com> - 0.1.1-0
 - The simp_options::fips catalyst did not disable fips; changed enable
   variable to default to simp_options::fips

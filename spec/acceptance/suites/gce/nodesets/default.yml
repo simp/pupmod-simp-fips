@@ -1,0 +1,21 @@
+HOSTS:
+  el7:
+    roles:
+      - server
+      - default
+      - master
+    platform:   rhel-7-v20170426
+    hypervisor: google
+  el6:
+    roles:
+      - client
+    platform:   rhel-6-v20170426
+    hypervisor: google
+CONFIG:
+  log_level: verbose
+  type:      aio
+  keyfile:  ADD_ME
+  gce_project: ADD_ME
+  gce_keyfile: ADD_ME
+  gce_password: notasecret
+  gce_email: ADD_ME

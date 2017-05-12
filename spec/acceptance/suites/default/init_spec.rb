@@ -13,6 +13,8 @@ describe 'fips' do
     context 'default parameters and Enable FIPS' do
       # Using puppet_apply as a helper
       it 'should work with no errors' do
+        set_hieradata_on(host, { 'simp_options::fips' => true })
+
         # Must be FIPS compliant!
         # This is typically set during `simp config`
         on(host, 'puppet config set digest_algorithm sha256')
@@ -23,7 +25,7 @@ describe 'fips' do
         result = apply_manifest_on(host, manifest, :catch_failures => true)
         expect(result.output).to include('fips => modified')
 
-        # Reboot to disable fips in the kernel
+        # Reboot to enable fips in the kernel
         host.reboot
       end
 

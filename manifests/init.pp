@@ -9,13 +9,17 @@
 # @param enabled
 #   If FIPS should be enabled or disabled on the system.
 #
+#   * NOTE: Given the dangerous nature of FIPS unexpectedly being activated on
+#     a system, this module mirrors the existing status of FIPS on the system
+#     to which it is applied.
+#
 # @param aesni
 #   NOTE: This parameter is controlled by params.pp
 #   This parameter indicates wether or not the system uses the
 #   Advanced Encryption Standard New Instructions set.
 #
 class fips (
-  Boolean $enabled = simplib::lookup('simp_options::fips', { 'default_value' => true }),
+  Boolean $enabled = simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled']}),
   Boolean $aesni   = $::fips::params::aesni
 ) inherits fips::params {
 

@@ -1,12 +1,13 @@
-* Fri May 12 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.1.3-0
+* Fri May 12 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.1.2-0
 - Including the FIPS module was causing FIPS mode to be enabled by default.
   This had high potential for causing issues, as evidenced by our acceptance
   tests, so we now mirror the 'enabled' state of the module based on whether or
   not FIPS is already enabled on the target system.
+- Update puppet dependency in metadata.json
 
 * Fri May 05 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.1.2-0
 - Created a work-around for an undocumented issue where /boot is not
-  on its own paritition but is added to the kernel parameters with
+  on its own partition but is added to the kernel parameters with
   fips=1. This situation ends up creating a kernel panic on the
   system until the boot= entry is removed from the kernel boot line.
 - Added tests against GCE since that is the default image configuration

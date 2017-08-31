@@ -5,5 +5,5 @@ Requires: pupmod-simp-simplib >= 3.1.0-0
 Requires: pupmod-simp-simplib < 4.0.0-0
 Requires: pupmod-herculesteam-augeasproviders_core < 3.0.0-0
 Requires: pupmod-herculesteam-augeasproviders_core >= 2.1.1-0
-Requires: pupmod-herculesteam-augeasproviders_grub < 3.0.0-0
+Requires: pupmod-herculesteam-augeasproviders_grub < 4.0.0-0
 Requires: pupmod-herculesteam-augeasproviders_grub >= 2.3.1-0

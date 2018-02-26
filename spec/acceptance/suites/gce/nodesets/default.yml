@@ -4,12 +4,14 @@ HOSTS:
       - server
       - default
       - master
-    platform:   rhel-7-v20170426
+    platform:   el-7-x86_64
+    image:      rhel-7-v20170426
     hypervisor: google
   el6:
     roles:
       - client
-    platform:   rhel-6-v20170426
+    platform:   el-6-x86_64
+    image:      rhel-6-v20170426
     hypervisor: google
 CONFIG:
   log_level: verbose
@@ -17,5 +19,4 @@ CONFIG:
   keyfile:  ADD_ME
   gce_project: ADD_ME
   gce_keyfile: ADD_ME
-  gce_password: notasecret
   gce_email: ADD_ME

@@ -1,9 +1,10 @@
 * Mon Feb 26 2018 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.1.4-0
-- Update GCE suite
-- Update .travis.yml and .gitab-ci.yml
+- Updated testing configurations including GCE suite information,
+ .travis.yml and .gitab-ci.yml.
 
 * Sat Sep 30 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.1.3-0
-- Updated to augeasproviders_grub 3
+- Updated to latest augeasproviders_grub version.  New module
+  had no functionality impacts.
 
 * Fri May 12 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.1.2-0
 - Including the FIPS module was causing FIPS mode to be enabled by default.

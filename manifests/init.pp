@@ -23,6 +23,8 @@ class fips (
   Boolean $aesni   = $::fips::params::aesni
 ) inherits fips::params {
 
+  simplib::assert_metadata($module_name)
+
   case $facts['os']['family'] {
     'RedHat': {
       $fips_kernel_value = $enabled ? {
@@ -97,9 +99,6 @@ class fips (
         subscribe   => Package['nss'],
         refreshonly => true
       }
-    }
-    default : {
-      fail("Only the RedHat family is supported by the ${module_name} module at this time.")
     }
   }
 }

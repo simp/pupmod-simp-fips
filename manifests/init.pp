@@ -69,7 +69,7 @@ class fips (
           notify => Exec['dracut_rebuild'];
 
         'fipscheck':
-          ensure => latest
+          ensure => 'latest'
       }
 
       if $aesni {
@@ -88,7 +88,9 @@ class fips (
         }
       }
 
-      reboot_notify { 'fips': }
+      reboot_notify { 'fips':
+        reason => 'The status of the fips kernel parameter has changed'
+      }
 
       # If the NSS and dracut packages don't stay reasonably in sync, your system
       # may not reboot.
@@ -97,7 +99,8 @@ class fips (
       exec { 'dracut_rebuild':
         command     => '/sbin/dracut -f',
         subscribe   => Package['nss'],
-        refreshonly => true
+        refreshonly => true,
+        notify      => Reboot_notify['fips'];
       }
     }
   }

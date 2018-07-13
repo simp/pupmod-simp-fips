@@ -23,10 +23,13 @@ describe 'fips' do
 
       it 'should require reboot on subsequent run' do
         result = apply_manifest_on(host, manifest, :catch_failures => true)
-        expect(result.output).to include('fips => modified')
+        expect(result.output).to include('fips => The status of the fips kernel parameter has changed')
 
         # Reboot to enable fips in the kernel
         host.reboot
+
+        # run puppet again to clean the reboot notify provider files
+        apply_manifest_on(host, manifest)
       end
 
       it 'should have kernel-level FIPS enabled on reboot' do
@@ -58,7 +61,7 @@ describe 'fips' do
 
       it 'should require reboot on subsequent run' do
         result = apply_manifest_on(host, manifest, :catch_failures => true)
-        expect(result.output).to include('fips => modified')
+        expect(result.output).to include('fips => The status of the fips kernel parameter has changed')
 
         # Reboot to disable fips in the kernel
         host.reboot

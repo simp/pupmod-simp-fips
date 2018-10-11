@@ -21,7 +21,7 @@
 # @param dracut_ensure The ensure status of the dracut-fips and
 #   dracut-fips-aesni packages
 #
-# @param nss_ensure The ensure status of the nss package
+# @param fipscheck_ensure The ensure status of the nss package
 #
 # @param nss_ensure The ensure status of the fipscheck package
 #

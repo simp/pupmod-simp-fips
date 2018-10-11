@@ -18,9 +18,19 @@
 #   This parameter indicates wether or not the system uses the
 #   Advanced Encryption Standard New Instructions set.
 #
+# @param dracut_ensure The ensure status of the dracut-fips and
+#   dracut-fips-aesni packages
+#
+# @param nss_ensure The ensure status of the nss package
+#
+# @param nss_ensure The ensure status of the fipscheck package
+#
 class fips (
   Boolean $enabled = simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled']}),
-  Boolean $aesni   = $::fips::params::aesni
+  Boolean $aesni   = $::fips::params::aesni,
+  String  $dracut_ensure    = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
+  String  $fipscheck_ensure = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
+  String  $nss_ensure       = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })
 ) inherits fips::params {
 
   simplib::assert_metadata($module_name)
@@ -35,7 +45,7 @@ class fips (
       # The dracut packages need to removed/added and the image rebuilt
       # depending on fips status or the system won't boot properly.
       $fips_package_status = $enabled ? {
-        true    => 'latest',
+        true    => $dracut_ensure,
         default => 'absent'
       }
 
@@ -69,7 +79,7 @@ class fips (
           notify => Exec['dracut_rebuild'];
 
         'fipscheck':
-          ensure => 'latest'
+          ensure => $fipscheck_ensure
       }
 
       if $aesni {
@@ -94,7 +104,9 @@ class fips (
 
       # If the NSS and dracut packages don't stay reasonably in sync, your system
       # may not reboot.
-      package { 'nss': ensure => 'latest' }
+      package { 'nss':
+        ensure => $nss_ensure
+      }
 
       exec { 'dracut_rebuild':
         command     => '/sbin/dracut -f',

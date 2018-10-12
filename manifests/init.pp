@@ -4,7 +4,7 @@
 #
 # Changing the FIPS status of a system changes the cryptographic modules used.
 # This can affect existing keys and certificates and make them unusable.  Make
-# sure these affect are understood before changing the status.
+# sure these effects are understood before changing the status.
 #
 # @param enabled
 #   If FIPS should be enabled or disabled on the system.
@@ -15,15 +15,15 @@
 #
 # @param aesni
 #   NOTE: This parameter is controlled by params.pp
-#   This parameter indicates wether or not the system uses the
+#   This parameter indicates whether the system uses the
 #   Advanced Encryption Standard New Instructions set.
 #
 # @param dracut_ensure The ensure status of the dracut-fips and
 #   dracut-fips-aesni packages
 #
-# @param fipscheck_ensure The ensure status of the nss package
+# @param fipscheck_ensure The ensure status of the fipscheck package
 #
-# @param nss_ensure The ensure status of the fipscheck package
+# @param nss_ensure The ensure status of the nss package
 #
 class fips (
   Boolean $enabled = simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled']}),

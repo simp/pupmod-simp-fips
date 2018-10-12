@@ -1,5 +1,5 @@
 * Thu Oct 11 2018 Nick Miller <nick.miller@onyxpoint.com> - 0.2.0-0
-- Added $dracut_ensure and $nss_ensure parameters
+- Added $dracut_ensure, $fipscheck_ensure and $nss_ensure parameters
   - Changed the packages from 'latest' to 'installed'
   - It will also respect `simp_options::package_ensure`
 

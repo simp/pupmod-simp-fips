@@ -1,0 +1,39 @@
+---
+version: 2.0.0
+checks:
+  oval:com.puppet.forge.simp.fips.aesni:
+    settings:
+      parameter: fips::aesni
+      value: true
+    type: puppet-class-parameter
+    controls:
+      nist_800_53_rev4:AC-3: true
+      nist_800_53_rev4:AC-17A:2: true
+      nist_800_53_rev4:IA-7: true
+      nist_800_53_rev4:SC-13: true
+      disa_stig: true
+      RHEL-07-021280: true
+      RHEL-07-010300: true
+      SRG-OS-000033-GPOS-00014: true
+      SRG-OS-000396-GPOS-00176: true
+      SRG-OS-000478-GPOS-00223: true
+      SRG-OS-000120-GPOS-00061: true
+      cci:CCI-000068: true
+      cci:CCI-002450: true
+      cci:CCI-000803: true
+    identifiers:
+      nist_800_53_rev4:
+      - AC-3
+      - AC-17A:2
+      - IA-7
+      - SC-13
+      disa_stig:
+      - RHEL-07-021280
+      - RHEL-07-010300
+      - SRG-OS-000033-GPOS-00014
+      - SRG-OS-000396-GPOS-00176
+      - SRG-OS-000478-GPOS-00223
+      - SRG-OS-000120-GPOS-00061
+      - CCI-000068
+      - CCI-002450
+      - CCI-000803

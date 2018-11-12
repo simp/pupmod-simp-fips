@@ -2,7 +2,7 @@
 - Added $dracut_ensure, $fipscheck_ensure and $nss_ensure parameters
   - Changed the packages from 'latest' to 'installed'
   - It will also respect `simp_options::package_ensure`
-- Update badges and contribution guide URL in README.md
+- Update badges and contribution guide URL in the README.md
 
 * Thu Jul 12 2018 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.2.0-0
 - Added support for OEL and Puppet 5

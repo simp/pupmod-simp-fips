@@ -184,7 +184,7 @@ pup6-unit:
 
 # Acceptance Tests
 # ==============================================================================
-# The acceptance tests turn FIPS on and off, so not BEAKER_fips=yes tests are
+# The acceptance tests turn FIPS on and off, so no BEAKER_fips=yes tests are
 # appropriate.
 pup4.10:
   <<: *pup_4_10

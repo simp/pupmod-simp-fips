@@ -14,7 +14,6 @@
 #     to which it is applied.
 #
 # @param aesni
-#   NOTE: This parameter is controlled by params.pp
 #   This parameter indicates whether the system uses the
 #   Advanced Encryption Standard New Instructions set.
 #
@@ -27,11 +26,11 @@
 #
 class fips (
   Boolean $enabled = simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled']}),
-  Boolean $aesni   = $::fips::params::aesni,
+  Boolean $aesni   = ($facts['cpuinfo'] and member($facts['cpuinfo']['processor0']['flags'], 'aes')),
   String  $dracut_ensure    = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
   String  $fipscheck_ensure = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
   String  $nss_ensure       = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })
-) inherits fips::params {
+) {
 
   simplib::assert_metadata($module_name)
 

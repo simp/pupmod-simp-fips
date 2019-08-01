@@ -159,17 +159,13 @@ pup6-unit:
 
 # Acceptance tests
 # ==============================================================================
+# The acceptance tests turn FIPS on and off, so no BEAKER_fips=yes tests are
+# appropriate.
 pup5.5.10:
   <<: *pup_5_5_10
   <<: *acceptance_base
   script:
     - 'bundle exec rake beaker:suites'
-
-pup5.5.10-fips:
-  <<: *pup_5_5_10
-  <<: *acceptance_base
-  script:
-    - 'BEAKER_fips=yes bundle exec rake beaker:suites'
 
 pup5.5.10-oel:
   <<: *pup_5_5_10
@@ -177,21 +173,8 @@ pup5.5.10-oel:
   script:
     - 'bundle exec rake beaker:suites[default,oel]'
 
-pup5.5.10-oel-fips:
-  <<: *pup_5_5_10
-  <<: *acceptance_base
-  <<: *only_with_SIMP_FULL_MATRIX
-  script:
-    - 'BEAKER_fips=yes bundle exec rake beaker:suites[default,oel]'
-
 pup6:
   <<: *pup_6
   <<: *acceptance_base
   script:
     - 'bundle exec rake beaker:suites'
-
-pup6-fips:
-  <<: *pup_6
-  <<: *acceptance_base
-  script:
-    - 'BEAKER_fips=yes bundle exec rake beaker:suites'

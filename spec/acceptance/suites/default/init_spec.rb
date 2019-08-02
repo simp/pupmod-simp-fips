@@ -74,7 +74,7 @@ describe 'fips' do
 
       it 'should not have the dracut-fips package installed' do
         result = on(host, 'puppet resource package dracut-fips')
-        expect(result.output).to match(/ensure => '(absent|purged)'/)
+        expect(result.output).to match(/ensure\s*=> '(absent|purged)'/)
       end
     end
   end

@@ -41,11 +41,23 @@ class fips (
         default => '0'
       }
 
-      # The dracut packages need to removed/added and the image rebuilt
-      # depending on fips status or the system won't boot properly.
-      $fips_package_status = $enabled ? {
-        true    => $dracut_ensure,
-        default => 'absent'
+      # EL 8+ rolls the FIPS portions directly into the base dracut package so
+      # we must NEVER attempt to uninstall it.
+      if $facts['os']['release']['major'] > '7' {
+        if $dracut_ensure == 'absent' {
+          $fips_package_status = 'installed'
+        }
+        else {
+          $fips_package_status = $dracut_ensure
+        }
+      }
+      else {
+        # The dracut packages need to removed/added and the image rebuilt
+        # depending on fips status or the system won't boot properly.
+        $fips_package_status = $enabled ? {
+          true    => $dracut_ensure,
+          default => 'absent'
+        }
       }
 
       kernel_parameter { 'fips':
@@ -108,9 +120,10 @@ class fips (
       }
 
       exec { 'dracut_rebuild':
-        command     => '/sbin/dracut -f',
+        command     => 'dracut -f',
         subscribe   => Package['nss'],
         refreshonly => true,
+        path        => ['/sbin', '/usr/bin'],
         notify      => Reboot_notify['fips'];
       }
     }

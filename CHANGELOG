@@ -1,4 +1,8 @@
-* Thu Jun 06 2019 Steven Pritchard <steven.pritchard@onyxpoint.com> -0.3.0-0
+* Tue Dec 10 2019 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.4.0-0
+- Add EL8 support
+- Add REFERENCE.md
+
+* Thu Jun 06 2019 Steven Pritchard <steven.pritchard@onyxpoint.com> - 0.3.0-0
 - Add v2 compliance_markup data
 
 * Thu Mar 28 2019 Jim Anderson <thesemicolons@protonmail.com> - 0.2.2-0

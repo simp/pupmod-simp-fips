@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe 'fips' do
   context 'supported operating systems' do
-    on_supported_os.each do |os, facts|
+    on_supported_os.each do |os, os_facts|
       let(:facts){
-        facts.merge({
+        os_facts.merge({
         :root_dir_uuid => '123-456-789',
         :boot_dir_uuid => '123-456-790'
       }) }
@@ -32,7 +32,7 @@ describe 'fips' do
 
           context 'when boot is not a separate partition' do
             let(:facts){
-              facts.merge({
+              os_facts.merge({
               :root_dir_uuid => '123-456-789',
               :boot_dir_uuid => '123-456-789'
             }) }
@@ -51,11 +51,13 @@ describe 'fips' do
         end
 
         context 'when_enabling_fips and aes' do
-          let(:facts){ facts.merge({
-            :cpuinfo => { :processor0 => { :flags => ['aes'] }},
-            :root_dir_uuid => '123-456-789',
-            :boot_dir_uuid => '123-456-790'
-          })}
+          let(:facts){
+            os_facts.merge({
+              :cpuinfo => { :processor0 => { :flags => ['aes'] }},
+              :root_dir_uuid => '123-456-789',
+              :boot_dir_uuid => '123-456-790'
+            })
+          }
           let(:params){{
             :enabled => true
           }}
@@ -74,15 +76,25 @@ describe 'fips' do
         end
 
         context 'when_disabling_fips and aes' do
-          let(:facts){ facts.merge({
+          let(:facts){
+            os_facts.merge({
             :cpuinfo => { :processor0 => { :flags => ['aes'] }},
             :root_dir_uuid => '123-456-789',
             :boot_dir_uuid => '123-456-790'
-          })}
+            })
+          }
 
           let(:params){{
             :enabled => false
           }}
+
+          let(:package_install_state){
+            if os_facts[:os][:release][:major] > '7'
+              'installed'
+            else
+              'absent'
+            end
+          }
 
           it { is_expected.to compile.with_all_deps }
           it {
@@ -90,9 +102,9 @@ describe 'fips' do
             is_expected.to create_kernel_parameter('fips').that_notifies('Reboot_notify[fips]')
           }
           it {
-            is_expected.to create_package('dracut-fips-aesni').with_ensure('absent').that_comes_before('Package[dracut-fips]')
+            is_expected.to create_package('dracut-fips-aesni').with_ensure(package_install_state).that_comes_before('Package[dracut-fips]')
             is_expected.to create_package('dracut-fips-aesni').that_notifies('Exec[dracut_rebuild]')
-            is_expected.to create_package('dracut-fips').with_ensure('absent')
+            is_expected.to create_package('dracut-fips').with_ensure(package_install_state)
             is_expected.to create_package('dracut-fips').that_notifies('Exec[dracut_rebuild]')
           }
           it { is_expected.to create_reboot_notify('fips') }

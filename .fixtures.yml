@@ -1,6 +1,10 @@
 ---
 fixtures:
   repositories:
+    disa_stig-el7-baseline:
+      repo: https://github.com/simp/inspec-profile-disa_stig-el7
+      branch: master
+      target: spec/fixtures/inspec_deps/inspec_profiles/profiles
     augeasproviders_core: https://github.com/simp/augeasproviders_core
     augeasproviders_grub: https://github.com/simp/augeasproviders_grub
     compliance_markup: https://github.com/simp/pupmod-simp-compliance_markup

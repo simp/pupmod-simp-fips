@@ -14,6 +14,7 @@
   * [What fips affects](#what-fips-affects)
 * [> FIPS mode disables md5 hashing at a library level. Enabling it may have unintended consequences.](#-fips-mode-disables-md5-hashing-at-a-library-level-enabling-it-may-have-unintended-consequences)
   * [Beginning with fips](#beginning-with-fips)
+* [> method for propagating your FIPS intentions to all SIMP modules consistently.](#-method-for-propagating-your-fips-intentions-to-all-simp-modules-consistently)
 * [Reference](#reference)
 * [Limitations](#limitations)
 * [Development](#development)
@@ -39,7 +40,6 @@ FIPS mode in supported operating systems.
 This module is a component of the [System Integrity Management Platform](https://simp-project.com),
 a compliance-management framework built on Puppet.
 
-
 If you find any issues, they may be submitted to our [bug tracker](https://simp-project.atlassian.net/).
 
 ## Setup
@@ -61,13 +61,16 @@ If you find any issues, they may be submitted to our [bug tracker](https://simp-
 
 ### Beginning with fips
 
-Include the `fips` class. By default it will enable FIPS mode, but if you'd like
-to ensure that FIPS mode is disabled, call the class and set `fips::enabled:
-false` in hiera.
+Include the `fips` class. By default it **will enable FIPS mode**, but if you'd
+like to ensure that FIPS mode is disabled, call the class and set
+`fips::enabled: false` in hiera.
 
-This section is where you describe how to customize, configure, and do the fancy
-stuff with your module here. It's especially helpful if you include usage
-examples and code samples for doing things with your module.
+-----------------------------------------
+> **IMPORTANT**
+>
+> Setting `simp_options::fips` to either `true` or `false` is the absolute best
+> method for propagating your FIPS intentions to all SIMP modules consistently.
+-----------------------------------------
 
 ## Reference
 

@@ -76,11 +76,22 @@ describe 'fips' do
         end
 
         context 'when_disabling_fips and aes' do
+          if os_facts[:os][:release][:major] > '7'
+            let(:crypto_policy__state){{
+              'global_policy'             => 'DEFAULT',
+              'global_policy_applied'     => true,
+              'global_policies_available' => ['DEAFULT', 'FIPS']
+            }}
+          else
+            let(:crypto_policy__state){ nil }
+          end
+
           let(:facts){
             os_facts.merge({
             :cpuinfo => { :processor0 => { :flags => ['aes'] }},
             :root_dir_uuid => '123-456-789',
-            :boot_dir_uuid => '123-456-790'
+            :boot_dir_uuid => '123-456-790',
+            :crypto_policy__state => crypto_policy__state
             })
           }
 

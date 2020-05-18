@@ -68,8 +68,8 @@ like to ensure that FIPS mode is disabled, call the class and set
 -----------------------------------------
 > **IMPORTANT**
 >
-> Setting `simp_options::fips` to either `true` or `false` is the absolute best
-> method for propagating your FIPS intentions to all SIMP modules consistently.
+> Setting `simp_options::fips` to either `true` or `false` is _by far_ the best
+> method to consistently configure all SIMP modules with your intended FIPS mode.
 -----------------------------------------
 
 ## Reference

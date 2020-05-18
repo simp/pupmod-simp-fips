@@ -61,9 +61,13 @@ If you find any issues, they may be submitted to our [bug tracker](https://simp-
 
 ### Beginning with fips
 
-Include the `fips` class. By default it **will enable FIPS mode**, but if you'd
-like to ensure that FIPS mode is disabled, call the class and set
-`fips::enabled: false` in hiera.
+Include the `fips` class.
+
+* By default, this **will enable FIPS mode**.
+* To ensure that FIPS mode is disabled, set `simp_options::fips` to `false`.
+  * Do _not_ set `fips::enabled` directly to `false`―it defaults to the value
+    of `simp_options::fips` (as do the FIPS-related parameters of all other
+    SIMP modules).
 
 -----------------------------------------
 > **IMPORTANT**

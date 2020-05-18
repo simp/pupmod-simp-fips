@@ -6,9 +6,8 @@
 # This can affect existing keys and certificates and make them unusable.  Make
 # sure these effects are understood before changing the status.
 #
-# NOTE: The absolute best way of ensuring that your desire to move into FIPS
-# mode is set across ALL SIMP modules is to set `simp_options::fips` to `true`
-# in Hiera.
+# NOTE: The preferred method yo set FIPS mode consistently across ALL
+# ALL SIMP modules is to set `simp_options::fips` to `true` in Hiera.
 #
 # @param enabled
 #   If FIPS should be enabled or disabled on the system.

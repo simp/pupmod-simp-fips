@@ -19,6 +19,10 @@ Changing the FIPS status of a system changes the cryptographic modules used.
 This can affect existing keys and certificates and make them unusable.  Make
 sure these effects are understood before changing the status.
 
+NOTE: The absolute best way of ensuring that your desire to move into FIPS
+mode is set across ALL SIMP modules is to set `simp_options::fips` to `true`
+in Hiera.
+
 #### Parameters
 
 The following parameters are available in the `fips` class.

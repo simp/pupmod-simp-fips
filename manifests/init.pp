@@ -6,6 +6,9 @@
 # This can affect existing keys and certificates and make them unusable.  Make
 # sure these effects are understood before changing the status.
 #
+# NOTE: The preferred method yo set FIPS mode consistently across ALL
+# ALL SIMP modules is to set `simp_options::fips` to `true` in Hiera.
+#
 # @param enabled
 #   If FIPS should be enabled or disabled on the system.
 #
@@ -25,8 +28,8 @@
 # @param nss_ensure The ensure status of the nss package
 #
 class fips (
-  Boolean $enabled = simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled']}),
-  Boolean $aesni   = ($facts['cpuinfo'] and member($facts['cpuinfo']['processor0']['flags'], 'aes')),
+  Boolean $enabled          = simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled']}),
+  Boolean $aesni            = ($facts['cpuinfo'] and member($facts['cpuinfo']['processor0']['flags'], 'aes')),
   String  $dracut_ensure    = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
   String  $fipscheck_ensure = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
   String  $nss_ensure       = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })
@@ -34,98 +37,100 @@ class fips (
 
   simplib::assert_metadata($module_name)
 
-  case $facts['os']['family'] {
-    'RedHat': {
-      $fips_kernel_value = $enabled ? {
-        true    => '1',
-        default => '0'
-      }
+  $fips_kernel_value = $enabled ? {
+    true    => '1',
+    default => '0'
+  }
 
-      # EL 8+ rolls the FIPS portions directly into the base dracut package so
-      # we must NEVER attempt to uninstall it.
-      if $facts['os']['release']['major'] > '7' {
-        if $dracut_ensure == 'absent' {
-          $fips_package_status = 'installed'
-        }
-        else {
-          $fips_package_status = $dracut_ensure
-        }
-      }
-      else {
-        # The dracut packages need to removed/added and the image rebuilt
-        # depending on fips status or the system won't boot properly.
-        $fips_package_status = $enabled ? {
-          true    => $dracut_ensure,
-          default => 'absent'
-        }
-      }
+  # The 'crypto_policy__state' fact will only be populated on systems that
+  # have the crypto policy tools installed.
+  if $facts['crypto_policy__state'] {
+    simplib::assert_optional_dependency($module_name, 'simp/crypto_policy')
 
-      kernel_parameter { 'fips':
-        value  => $fips_kernel_value,
-        notify => Reboot_notify['fips']
+    include 'crypto_policy'
+
+    # EL 8+ rolls the FIPS portions directly into the base dracut package so
+    # we must NEVER attempt to uninstall it.
+    if $dracut_ensure == 'absent' {
+      $fips_package_status = 'installed'
+    }
+    else {
+      $fips_package_status = $dracut_ensure
+    }
+  }
+  else {
+    # The dracut packages need to removed/added and the image rebuilt
+    # depending on fips status or the system won't boot properly.
+    $fips_package_status = $enabled ? {
+      true    => $dracut_ensure,
+      default => 'absent'
+    }
+  }
+
+  kernel_parameter { 'fips':
+    value  => $fips_kernel_value,
+    notify => Reboot_notify['fips']
+    # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+  }
+
+  # This should only be present if /boot is on a separate partition
+  if $facts['boot_dir_uuid'] and $facts['root_dir_uuid'] {
+    if ($facts['boot_dir_uuid'] == $facts['root_dir_uuid']) {
+      kernel_parameter { 'boot':
+        ensure => absent,
+        notify => Reboot_notify['fips'];
         # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
       }
-
-      # This should only be present if /boot is on a separate partition
-      if $facts['boot_dir_uuid'] and $facts['root_dir_uuid'] {
-        if ($facts['boot_dir_uuid'] == $facts['root_dir_uuid']) {
-          kernel_parameter { 'boot':
-            ensure => absent,
-            notify => Reboot_notify['fips'];
-            # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
-          }
-        }
-        else {
-          kernel_parameter { 'boot':
-            value  => "UUID=${facts['boot_dir_uuid']}",
-            notify => Reboot_notify['fips'];
-            # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
-          }
-        }
-      }
-
-      package {
-        'dracut-fips':
-          ensure => $fips_package_status,
-          notify => Exec['dracut_rebuild'];
-
-        'fipscheck':
-          ensure => $fipscheck_ensure
-      }
-
-      if $aesni {
-        package { 'dracut-fips-aesni':
-          ensure => $fips_package_status,
-          notify => Exec['dracut_rebuild']
-        }
-
-        # There were failures if the packages are not removed/installed in the correct
-        # order
-        if $enabled {
-          Package['dracut-fips'] -> Package['dracut-fips-aesni']
-        }
-        else {
-          Package['dracut-fips-aesni'] -> Package['dracut-fips']
-        }
-      }
-
-      reboot_notify { 'fips':
-        reason => 'The status of the fips kernel parameter has changed'
-      }
-
-      # If the NSS and dracut packages don't stay reasonably in sync, your system
-      # may not reboot.
-      package { 'nss':
-        ensure => $nss_ensure
-      }
-
-      exec { 'dracut_rebuild':
-        command     => 'dracut -f',
-        subscribe   => Package['nss'],
-        refreshonly => true,
-        path        => ['/sbin', '/usr/bin'],
-        notify      => Reboot_notify['fips'];
+    }
+    else {
+      kernel_parameter { 'boot':
+        value  => "UUID=${facts['boot_dir_uuid']}",
+        notify => Reboot_notify['fips'];
+        # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
       }
     }
+  }
+
+  package {
+    'dracut-fips':
+      ensure => $fips_package_status,
+      notify => Exec['dracut_rebuild'];
+
+    'fipscheck':
+      ensure => $fipscheck_ensure
+  }
+
+  if $aesni {
+    package { 'dracut-fips-aesni':
+      ensure => $fips_package_status,
+      notify => Exec['dracut_rebuild']
+    }
+
+    # There were failures if the packages are not removed/installed in the correct
+    # order
+    if $enabled {
+      Package['dracut-fips'] -> Package['dracut-fips-aesni']
+    }
+    else {
+      Package['dracut-fips-aesni'] -> Package['dracut-fips']
+    }
+  }
+
+  reboot_notify { 'fips':
+    reason => 'The status of the fips kernel parameter has changed'
+  }
+
+  # If the NSS and dracut packages don't stay reasonably in sync, your system
+  # may not reboot.
+  package { 'nss':
+    ensure => $nss_ensure
+  }
+
+  exec { 'dracut_rebuild':
+    command     => 'dracut -f',
+    subscribe   => Package['nss'],
+    refreshonly => true,
+    path        => ['/sbin', '/usr/bin'],
+    notify      => Reboot_notify['fips'];
   }
 }

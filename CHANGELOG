@@ -1,3 +1,6 @@
+* Wed Sep 16 2020 Liz Nemsick <lnemsick.simp@gmail.com> - 0.4.2-0
+- Advertise OEL8 support in the metadata.json.
+
 * Wed May 13 2020 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.4.1-0
 - Ensure that EL8 updates trigger updating the global system crypto policy since
   some subsystems now ignore the local configuration by default.

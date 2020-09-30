@@ -12,6 +12,17 @@ HOSTS:
     platform: el-6-x86_64
     box: centos/6
     hypervisor: <%= hypervisor %>
+    ssh:
+      keepalive: true
+      keepalive_interval: 1
+      host_key:
+        - <%= Net::SSH::Transport::Algorithms::ALGORITHMS[:host_key].join("\n#{' '*8}- ") %>
+      kex:
+        - <%= Net::SSH::Transport::Algorithms::ALGORITHMS[:kex].join("\n#{' '*8}- ") %>
+      encryption:
+        - <%= Net::SSH::Transport::Algorithms::ALGORITHMS[:encryption].join("\n#{' '*8}- ") %>
+      hmac:
+        - <%= Net::SSH::Transport::Algorithms::ALGORITHMS[:hmac].join("\n#{' '*8}- ") %>
 
   el7:
     platform: el-7-x86_64

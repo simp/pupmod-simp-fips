@@ -13,6 +13,17 @@ HOSTS:
     platform:   el-6-x86_64
     image:      rhel-6-v20170426
     hypervisor: google
+    ssh:
+      keepalive: true
+      keepalive_interval: 1
+      host_key:
+        - <%= Net::SSH::Transport::Algorithms::ALGORITHMS[:host_key].join("\n#{' '*8}- ") %>
+      kex:
+        - <%= Net::SSH::Transport::Algorithms::ALGORITHMS[:kex].join("\n#{' '*8}- ") %>
+      encryption:
+        - <%= Net::SSH::Transport::Algorithms::ALGORITHMS[:encryption].join("\n#{' '*8}- ") %>
+      hmac:
+        - <%= Net::SSH::Transport::Algorithms::ALGORITHMS[:hmac].join("\n#{' '*8}- ") %>
 CONFIG:
   log_level: verbose
   type:      aio

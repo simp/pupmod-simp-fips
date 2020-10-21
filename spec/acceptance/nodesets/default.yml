@@ -13,8 +13,6 @@ HOSTS:
     box: centos/6
     hypervisor: <%= hypervisor %>
     ssh:
-      keepalive: true
-      keepalive_interval: 1
       host_key:
         - <%= Net::SSH::Transport::Algorithms::ALGORITHMS[:host_key].join("\n#{' '*8}- ") %>
       kex:
@@ -35,6 +33,9 @@ HOSTS:
     hypervisor: <%= hypervisor %>
 
 CONFIG:
+  ssh:
+    keepalive: true
+    keepalive_interval: 10
   log_level: verbose
   type: aio
 <% if ENV['BEAKER_PUPPET_COLLECTION'] -%>

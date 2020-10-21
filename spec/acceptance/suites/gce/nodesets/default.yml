@@ -14,8 +14,6 @@ HOSTS:
     image:      rhel-6-v20170426
     hypervisor: google
     ssh:
-      keepalive: true
-      keepalive_interval: 1
       host_key:
         - <%= Net::SSH::Transport::Algorithms::ALGORITHMS[:host_key].join("\n#{' '*8}- ") %>
       kex:
@@ -25,6 +23,9 @@ HOSTS:
       hmac:
         - <%= Net::SSH::Transport::Algorithms::ALGORITHMS[:hmac].join("\n#{' '*8}- ") %>
 CONFIG:
+  ssh:
+    keepalive: true
+    keepalive_interval: 10
   log_level: verbose
   type:      aio
   keyfile:  ADD_ME

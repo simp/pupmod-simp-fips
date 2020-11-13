@@ -14,7 +14,7 @@
   * [What fips affects](#what-fips-affects)
 * [> FIPS mode disables md5 hashing at a library level. Enabling it may have unintended consequences.](#-fips-mode-disables-md5-hashing-at-a-library-level-enabling-it-may-have-unintended-consequences)
   * [Beginning with fips](#beginning-with-fips)
-* [> method for propagating your FIPS intentions to all SIMP modules consistently.](#-method-for-propagating-your-fips-intentions-to-all-simp-modules-consistently)
+* [> method to consistently configure all SIMP modules with your intended FIPS mode.](#-method-to-consistently-configure-all-simp-modules-with-your-intended-fips-mode)
 * [Reference](#reference)
 * [Limitations](#limitations)
 * [Development](#development)

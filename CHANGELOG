@@ -1,3 +1,8 @@
+* Wed Sep 30 2020 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.4.3-0
+- Fix: Update the beaker nodesets to embed the SSH crypto configuration.
+   - This prevents issues when the underlying user's SSH settings would not
+     otherwise allow FIPS-compatible algorithms for older systems.
+
 * Wed Sep 16 2020 Liz Nemsick <lnemsick.simp@gmail.com> - 0.4.2-0
 - Advertise OEL8 support in the metadata.json.
 

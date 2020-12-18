@@ -1,3 +1,6 @@
+* Fri Dec 18 2020 Chris Tessmer <chris.tessmer@onyxpoint.com> - 0.4.4
+- Removed EL6 support
+
 * Wed Sep 30 2020 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.4.3-0
 - Fix: Update the beaker nodesets to embed the SSH crypto configuration.
    - This prevents issues when the underlying user's SSH settings would not

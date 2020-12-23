@@ -59,7 +59,7 @@ class fips (
     }
   }
   else {
-    # The dracut packages need to removed/added and the image rebuilt
+    # The dracut packages need to be removed/added and the image rebuilt
     # depending on fips status or the system won't boot properly.
     $fips_package_status = $enabled ? {
       true    => $dracut_ensure,
@@ -69,8 +69,10 @@ class fips (
 
   kernel_parameter { 'fips':
     value  => $fips_kernel_value,
-    notify => Reboot_notify['fips']
-    # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+    notify => [
+      Reboot_notify['fips'],
+      Exec['dracut_rebuild']
+    ]
   }
 
   # This should only be present if /boot is on a separate partition
@@ -78,15 +80,13 @@ class fips (
     if ($facts['boot_dir_uuid'] == $facts['root_dir_uuid']) {
       kernel_parameter { 'boot':
         ensure => absent,
-        notify => Reboot_notify['fips'];
-        # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+        notify => Reboot_notify['fips']
       }
     }
     else {
       kernel_parameter { 'boot':
         value  => "UUID=${facts['boot_dir_uuid']}",
-        notify => Reboot_notify['fips'];
-        # bootmode => 'normal', # This doesn't work due to a bug in the Grub Augeas Provider
+        notify => Reboot_notify['fips']
       }
     }
   }
@@ -126,11 +126,18 @@ class fips (
     ensure => $nss_ensure
   }
 
+  if $enabled {
+    $_fips_mode_setup_opt = '--enable'
+  }
+  else {
+    $_fips_mode_setup_opt = '--disable'
+  }
+
   exec { 'dracut_rebuild':
-    command     => 'dracut -f',
-    subscribe   => Package['nss'],
+    command     => "command fips-mode-setup ${_fips_mode_setup_opt} || dracut -f --regenerate-all",
     refreshonly => true,
     path        => ['/sbin', '/usr/bin'],
+    subscribe   => Package['nss'],
     notify      => Reboot_notify['fips'];
   }
 }

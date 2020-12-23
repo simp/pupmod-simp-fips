@@ -33,6 +33,10 @@ describe 'fips' do
         end
 
         # Reboot to enable fips in the kernel
+        if host.name == 'el8'
+          require 'pry'
+          binding.pry
+        end
         host.reboot
 
         # run puppet again to clean the reboot notify provider files
@@ -40,8 +44,7 @@ describe 'fips' do
       end
 
       it 'should have kernel-level FIPS enabled on reboot' do
-        result = on(host, 'puppet facts find `hostname` | grep fips_enabled')
-        expect(result.output).to match(/true/i)
+        expect(fact_on(host, 'fips_enabled')).to be true
       end
 
       it 'should have the dracut-fips package installed' do
@@ -50,8 +53,7 @@ describe 'fips' do
       end
 
       it 'should have the dracut-fips-aesni package installed' do
-        result = on(host, 'puppet facts')
-        cpuflags = JSON.load(result.output)['values']['cpuinfo']['processor0']['flags']
+        cpuflags = fact_on(host, 'cpuinfo.processor0.flags')
 
         if cpuflags.include?('aes')
           result = on(host, 'puppet resource package dracut-fips-aesni')
@@ -75,8 +77,7 @@ describe 'fips' do
       end
 
       it 'should have kernel-level FIPS disabled on reboot' do
-        result = on(host, 'puppet facts find `hostname` | grep fips_enabled')
-        expect(result.output).to match(/false/i)
+        expect(fact_on(host, 'fips_enabled')).to be false
       end
 
       if fact_on(host, 'os.release.major') > '7'

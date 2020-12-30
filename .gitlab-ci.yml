@@ -300,16 +300,8 @@ releng_checks:
 # Linting
 #-----------------------------------------------------------------------
 
-pup5-lint:
-  <<: *pup_5
-  <<: *lint_tests
-
-pup6-lint:
+pup-lint:
   <<: *pup_6
-  <<: *lint_tests
-
-pup7-lint:
-  <<: *pup_7
   <<: *lint_tests
 
 # Unit Tests
@@ -355,6 +347,7 @@ pup5:
 pup6:
   <<: *pup_6
   <<: *acceptance_base
+  <<: *with_SIMP_ACCEPTANCE_MATRIX_LEVEL_2
   script:
     - 'bundle exec rake beaker:suites[default]'
 
@@ -367,18 +360,7 @@ pup6.18.0:
 pup6.18.0-oel:
   <<: *pup_6_18_0
   <<: *acceptance_base
-  script:
-    - 'bundle exec rake beaker:suites[default,oel]'
-
-pup6.18.0:
-  <<: *pup_6_18_0
-  <<: *acceptance_base
-  script:
-    - 'bundle exec rake beaker:suites'
-
-pup6.18.0-oel:
-  <<: *pup_6_18_0
-  <<: *acceptance_base
+  <<: *with_SIMP_ACCEPTANCE_MATRIX_LEVEL_3
   script:
     - 'bundle exec rake beaker:suites[default,oel]'
 
@@ -387,3 +369,4 @@ pup7:
   <<: *acceptance_base
   script:
     - 'bundle exec rake beaker:suites[default]'
+  allow_failure: true

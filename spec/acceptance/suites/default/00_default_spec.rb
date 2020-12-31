@@ -33,10 +33,6 @@ describe 'fips' do
         end
 
         # Reboot to enable fips in the kernel
-        if host.name == 'el8'
-          require 'pry'
-          binding.pry
-        end
         host.reboot
 
         # run puppet again to clean the reboot notify provider files

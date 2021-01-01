@@ -241,11 +241,11 @@ variables:
     MATRIX_RUBY_VERSION: '2.5'
 
 .pup_7: &pup_7
-  image: 'ruby:2.5'
+  image: 'ruby:2.7'
   variables:
     PUPPET_VERSION: '~> 7.0'
     BEAKER_PUPPET_COLLECTION: 'puppet7'
-    MATRIX_RUBY_VERSION: '2.5'
+    MATRIX_RUBY_VERSION: '2.7'
 
 # Testing Environments
 #-----------------------------------------------------------------------

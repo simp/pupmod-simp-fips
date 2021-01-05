@@ -1,3 +1,16 @@
+* Wed Dec 23 2020 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.4.4
+- Fixed:
+  - Ensure that dracut_rebuild is called when the fips kernel parameter is
+    changed
+  - Try to call fips-mode-setup (EL8+) before falling back to the raw dracut
+    command
+  - Fixed the acceptance test fact checks
+- Changed:
+  - Added Puppet 7 support
+
+* Fri Dec 18 2020 Chris Tessmer <chris.tessmer@onyxpoint.com> - 0.4.4
+- Removed EL6 support
+
 * Wed Sep 30 2020 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.4.3-0
 - Fix: Update the beaker nodesets to embed the SSH crypto configuration.
    - This prevents issues when the underlying user's SSH settings would not

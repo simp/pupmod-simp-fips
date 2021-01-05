@@ -40,8 +40,7 @@ describe 'fips' do
       end
 
       it 'should have kernel-level FIPS enabled on reboot' do
-        result = on(host, 'puppet facts find `hostname` | grep fips_enabled')
-        expect(result.output).to match(/true/i)
+        expect(pfact_on(host, 'fips_enabled')).to be true
       end
 
       it 'should have the dracut-fips package installed' do
@@ -50,8 +49,7 @@ describe 'fips' do
       end
 
       it 'should have the dracut-fips-aesni package installed' do
-        result = on(host, 'puppet facts')
-        cpuflags = JSON.load(result.output)['values']['cpuinfo']['processor0']['flags']
+        cpuflags = pfact_on(host, 'cpuinfo.processor0.flags')
 
         if cpuflags.include?('aes')
           result = on(host, 'puppet resource package dracut-fips-aesni')
@@ -75,11 +73,10 @@ describe 'fips' do
       end
 
       it 'should have kernel-level FIPS disabled on reboot' do
-        result = on(host, 'puppet facts find `hostname` | grep fips_enabled')
-        expect(result.output).to match(/false/i)
+        expect(pfact_on(host, 'fips_enabled')).to be false
       end
 
-      if fact_on(host, 'os.release.major') > '7'
+      if pfact_on(host, 'os.release.major') > '7'
         it 'should have the dracut-fips package installed' do
           result = on(host, 'puppet resource package dracut-fips')
           expect(result.output).to_not include("ensure => 'absent'")

@@ -44,7 +44,7 @@ class fips (
 
   # The 'crypto_policy__state' fact will only be populated on systems that
   # have the crypto policy tools installed.
-  if $facts['crypto_policy__state'] {
+  if $facts['simplib__crypto_policy_state'] {
     simplib::assert_optional_dependency($module_name, 'simp/crypto_policy')
 
     include 'crypto_policy'

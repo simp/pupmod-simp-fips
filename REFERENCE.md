@@ -10,7 +10,7 @@
 
 ## Classes
 
-### `fips`
+### <a name="fips"></a>`fips`
 
 This module manages the enabling and disabling of FIPS on a system
 It will set the kernel boot parametes and install/remove the dracut packages
@@ -25,9 +25,15 @@ ALL SIMP modules is to set `simp_options::fips` to `true` in Hiera.
 
 #### Parameters
 
-The following parameters are available in the `fips` class.
+The following parameters are available in the `fips` class:
 
-##### `enabled`
+* [`enabled`](#enabled)
+* [`aesni`](#aesni)
+* [`dracut_ensure`](#dracut_ensure)
+* [`fipscheck_ensure`](#fipscheck_ensure)
+* [`nss_ensure`](#nss_ensure)
+
+##### <a name="enabled"></a>`enabled`
 
 Data type: `Boolean`
 
@@ -39,7 +45,7 @@ If FIPS should be enabled or disabled on the system.
 
 Default value: `simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled']})`
 
-##### `aesni`
+##### <a name="aesni"></a>`aesni`
 
 Data type: `Boolean`
 
@@ -48,7 +54,7 @@ Advanced Encryption Standard New Instructions set.
 
 Default value: `(`
 
-##### `dracut_ensure`
+##### <a name="dracut_ensure"></a>`dracut_ensure`
 
 Data type: `String`
 
@@ -57,7 +63,7 @@ dracut-fips-aesni packages
 
 Default value: `simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })`
 
-##### `fipscheck_ensure`
+##### <a name="fipscheck_ensure"></a>`fipscheck_ensure`
 
 Data type: `String`
 
@@ -65,7 +71,7 @@ The ensure status of the fipscheck package
 
 Default value: `simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })`
 
-##### `nss_ensure`
+##### <a name="nss_ensure"></a>`nss_ensure`
 
 Data type: `String`
 

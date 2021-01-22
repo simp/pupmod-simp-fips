@@ -1,3 +1,8 @@
+* Thu Jan 21 2021 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.4.5
+- Fixed:
+  - Now use the simplib__crypto_policy_state fact instead of
+    crypto_policy__state due to module dependency issues.
+
 * Wed Dec 23 2020 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.4.4
 - Fixed:
   - Ensure that dracut_rebuild is called when the fips kernel parameter is

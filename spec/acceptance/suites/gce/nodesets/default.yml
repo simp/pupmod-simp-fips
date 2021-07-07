@@ -2,7 +2,6 @@ HOSTS:
   el7:
     roles:
       - server
-      # roles migrated from now-removed el6 node(s): 
       - client
       - default
       - master

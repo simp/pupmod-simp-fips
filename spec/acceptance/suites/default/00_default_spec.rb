@@ -25,12 +25,7 @@ describe 'fips' do
         result = apply_manifest_on(host, manifest, :catch_failures => true)
         expect(result.output).to include('fips => The status of the fips kernel parameter has changed')
 
-        # Hack to allow Vagrant to SSH back into the system (should really fix
-        # this in Vagrant if possible)
-        opensshserver_config = '/etc/crypto-policies/back-ends/opensshserver.config'
-        if file_exists_on(host, opensshserver_config)
-          on(host, "sed --follow-symlinks -i 's/PubkeyAcceptedKeyTypes=/PubkeyAcceptedKeyTypes=ssh-rsa,/' #{opensshserver_config}")
-        end
+        munge_ssh_crypto_policies(host)
 
         # Reboot to enable fips in the kernel
         host.reboot

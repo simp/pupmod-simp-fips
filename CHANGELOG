@@ -1,3 +1,6 @@
+* Sat Oct 15 2022 Trevor Vaughan <trevor@sicura.us> - 0.5.2
+- Remove unnecessary augeasproviders_core module dependency
+
 * Sun Mar 20 2022 Trevor Vaughan <trevor@sicura.us> - 0.5.1
 - Support Amazon Linux 2
 

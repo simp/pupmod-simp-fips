@@ -34,12 +34,16 @@ class fips (
   String  $fipscheck_ensure = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
   String  $nss_ensure       = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })
 ) {
-
   simplib::assert_metadata($module_name)
 
   $fips_kernel_value = $enabled ? {
     true    => '1',
     default => '0'
+  }
+
+  $fipscheck_package_name = $facts['os']['release']['major'] > 8 ? {
+    true => 'libxcrypt',
+    default => 'fipscheck'
   }
 
   # The 'crypto_policy__state' fact will only be populated on systems that
@@ -96,8 +100,8 @@ class fips (
       ensure => $fips_package_status,
       notify => Exec['dracut_rebuild'];
 
-    'fipscheck':
-      ensure => $fipscheck_ensure
+    $fipscheck_package_name:
+      ensure => $fipscheck_ensure;
   }
 
   if $aesni {

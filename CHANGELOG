@@ -1,3 +1,6 @@
+* Wed Jan 18 2023 Michael Riddle <mike@sicura.us> - 0.5.3
+- Added support for RHEL 9
+
 * Sat Oct 15 2022 Trevor Vaughan <trevor@sicura.us> - 0.5.2
 - Remove unnecessary augeasproviders_core module dependency
 

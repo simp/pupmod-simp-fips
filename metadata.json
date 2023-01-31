@@ -50,6 +50,7 @@
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
+        "9",
         "8",
         "7"
       ]

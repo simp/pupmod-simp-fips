@@ -9,6 +9,9 @@
 # NOTE: The preferred method yo set FIPS mode consistently across ALL
 # ALL SIMP modules is to set `simp_options::fips` to `true` in Hiera.
 #
+# @param fipscheck_package_name The name of the package that provides the
+#   fipscheck binary
+#
 # @param enabled
 #   If FIPS should be enabled or disabled on the system.
 #
@@ -28,6 +31,7 @@
 # @param nss_ensure The ensure status of the nss package
 #
 class fips (
+  String  $fipscheck_package_name,
   Boolean $enabled          = simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled']}),
   Boolean $aesni            = ($facts['cpuinfo'] and member($facts['cpuinfo']['processor0']['flags'], 'aes')),
   String  $dracut_ensure    = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
@@ -39,11 +43,6 @@ class fips (
   $fips_kernel_value = $enabled ? {
     true    => '1',
     default => '0'
-  }
-
-  $fipscheck_package_name = $facts['os']['release']['major'] > 8 ? {
-    true => 'libxcrypt',
-    default => 'fipscheck'
   }
 
   # The 'crypto_policy__state' fact will only be populated on systems that

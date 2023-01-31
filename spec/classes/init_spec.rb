@@ -10,6 +10,15 @@ describe 'fips' do
       }) }
 
       context "on #{os}" do
+
+        let(:package_name){
+          if os_facts[:os][:name] == RedHat && Integer(os_facts[:os][:release][:major]) > 8
+            'libxcrypt'
+          else
+            'fipscheck'
+          end
+        }
+
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to create_package('nss') }
 
@@ -24,7 +33,7 @@ describe 'fips' do
             is_expected.to create_kernel_parameter('fips').that_notifies('Reboot_notify[fips]')
             is_expected.to create_package('dracut-fips').with_ensure('installed')
             is_expected.to create_package('dracut-fips').that_notifies('Exec[dracut_rebuild]')
-            is_expected.to create_package('fipscheck').with_ensure('installed')
+            is_expected.to create_package(package_name).with_ensure('installed')
           }
           it { is_expected.to create_kernel_parameter('boot').with_value("UUID=123-456-790") }
           it { is_expected.to create_kernel_parameter('boot').that_notifies('Reboot_notify[fips]') }
@@ -43,7 +52,7 @@ describe 'fips' do
               is_expected.to create_kernel_parameter('fips').that_notifies('Reboot_notify[fips]')
               is_expected.to create_package('dracut-fips').with_ensure('installed')
               is_expected.to create_package('dracut-fips').that_notifies('Exec[dracut_rebuild]')
-              is_expected.to create_package('fipscheck').with_ensure('installed')
+              is_expected.to create_package(package_name).with_ensure('installed')
             }
             it { is_expected.to create_kernel_parameter('boot').with_ensure('absent') }
             it { is_expected.to create_reboot_notify('fips') }
@@ -68,7 +77,7 @@ describe 'fips' do
             is_expected.to create_kernel_parameter('fips').that_notifies('Reboot_notify[fips]')
             is_expected.to create_package('dracut-fips-aesni').with_ensure('installed')
             is_expected.to create_package('dracut-fips-aesni').that_notifies('Exec[dracut_rebuild]')
-            is_expected.to create_package('fipscheck').with_ensure('installed')
+            is_expected.to create_package(package_name).with_ensure('installed')
           }
           it { is_expected.to create_kernel_parameter('boot').with_value("UUID=123-456-790") }
           it { is_expected.to create_kernel_parameter('boot').that_notifies('Reboot_notify[fips]') }

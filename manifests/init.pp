@@ -97,10 +97,12 @@ class fips (
   package {
     'dracut-fips':
       ensure => $fips_package_status,
-      notify => Exec['dracut_rebuild'];
+      notify => Exec['dracut_rebuild'],
+  }
 
+  package {
     $fipscheck_package_name:
-      ensure => $fipscheck_ensure;
+      ensure => $fipscheck_ensure,
   }
 
   if $aesni {

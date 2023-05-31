@@ -9,6 +9,9 @@
 # NOTE: The preferred method yo set FIPS mode consistently across ALL
 # ALL SIMP modules is to set `simp_options::fips` to `true` in Hiera.
 #
+# @param fipscheck_package_name The name of the package that provides the
+#   fipscheck binary
+#
 # @param enabled
 #   If FIPS should be enabled or disabled on the system.
 #
@@ -28,13 +31,13 @@
 # @param nss_ensure The ensure status of the nss package
 #
 class fips (
+  String  $fipscheck_package_name,
   Boolean $enabled          = simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled']}),
   Boolean $aesni            = ($facts['cpuinfo'] and member($facts['cpuinfo']['processor0']['flags'], 'aes')),
   String  $dracut_ensure    = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
   String  $fipscheck_ensure = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
   String  $nss_ensure       = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })
 ) {
-
   simplib::assert_metadata($module_name)
 
   $fips_kernel_value = $enabled ? {
@@ -94,10 +97,12 @@ class fips (
   package {
     'dracut-fips':
       ensure => $fips_package_status,
-      notify => Exec['dracut_rebuild'];
+      notify => Exec['dracut_rebuild'],
+  }
 
-    'fipscheck':
-      ensure => $fipscheck_ensure
+  package {
+    $fipscheck_package_name:
+      ensure => $fipscheck_ensure,
   }
 
   if $aesni {

@@ -12,7 +12,7 @@ describe 'fips' do
       context "on #{os}" do
 
         let(:fipscheck_package_name){
-          if os_facts[:os][:name] == 'RedHat' && os_facts[:os][:release][:major] == '9'
+          if facts[:os][:name] == 'RedHat' && facts[:os][:release][:major] == '9'
             'libxcrypt'
           else
             'fipscheck'
@@ -33,8 +33,7 @@ describe 'fips' do
             is_expected.to create_kernel_parameter('fips').that_notifies('Reboot_notify[fips]')
             is_expected.to create_package('dracut-fips').with_ensure('installed')
             is_expected.to create_package('dracut-fips').that_notifies('Exec[dracut_rebuild]')
-            is_expected.to create_package('libxcrypt').with_ensure('installed')
-            #is_expected.to create_package(fipscheck_package_name).with_ensure('installed')
+            is_expected.to create_package(fipscheck_package_name).with_ensure('installed')
           }
           it { is_expected.to create_kernel_parameter('boot').with_value("UUID=123-456-790") }
           it { is_expected.to create_kernel_parameter('boot').that_notifies('Reboot_notify[fips]') }

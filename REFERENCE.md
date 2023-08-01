@@ -27,13 +27,21 @@ ALL SIMP modules is to set `simp_options::fips` to `true` in Hiera.
 
 The following parameters are available in the `fips` class:
 
-* [`enabled`](#enabled)
-* [`aesni`](#aesni)
-* [`dracut_ensure`](#dracut_ensure)
-* [`fipscheck_ensure`](#fipscheck_ensure)
-* [`nss_ensure`](#nss_ensure)
+* [`fipscheck_package_name`](#-fips--fipscheck_package_name)
+* [`enabled`](#-fips--enabled)
+* [`aesni`](#-fips--aesni)
+* [`dracut_ensure`](#-fips--dracut_ensure)
+* [`fipscheck_ensure`](#-fips--fipscheck_ensure)
+* [`nss_ensure`](#-fips--nss_ensure)
 
-##### <a name="enabled"></a>`enabled`
+##### <a name="-fips--fipscheck_package_name"></a>`fipscheck_package_name`
+
+Data type: `String`
+
+The name of the package that provides the
+fipscheck binary
+
+##### <a name="-fips--enabled"></a>`enabled`
 
 Data type: `Boolean`
 
@@ -45,16 +53,16 @@ If FIPS should be enabled or disabled on the system.
 
 Default value: `simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled']})`
 
-##### <a name="aesni"></a>`aesni`
+##### <a name="-fips--aesni"></a>`aesni`
 
 Data type: `Boolean`
 
 This parameter indicates whether the system uses the
 Advanced Encryption Standard New Instructions set.
 
-Default value: `(`
+Default value: `($facts['cpuinfo'] and member($facts['cpuinfo']['processor0']['flags'], 'aes')`
 
-##### <a name="dracut_ensure"></a>`dracut_ensure`
+##### <a name="-fips--dracut_ensure"></a>`dracut_ensure`
 
 Data type: `String`
 
@@ -63,7 +71,7 @@ dracut-fips-aesni packages
 
 Default value: `simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })`
 
-##### <a name="fipscheck_ensure"></a>`fipscheck_ensure`
+##### <a name="-fips--fipscheck_ensure"></a>`fipscheck_ensure`
 
 Data type: `String`
 
@@ -71,7 +79,7 @@ The ensure status of the fipscheck package
 
 Default value: `simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })`
 
-##### <a name="nss_ensure"></a>`nss_ensure`
+##### <a name="-fips--nss_ensure"></a>`nss_ensure`
 
 Data type: `String`
 

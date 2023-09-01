@@ -1,6 +1,6 @@
 {
   "name": "simp-fips",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "author": "SIMP Team",
   "summary": "A SIMP module for managing FIPS",
   "license": "Apache-2.0",
@@ -64,6 +64,12 @@
     },
     {
       "operatingsystem": "Rocky",
+      "operatingsystemrelease": [
+        "8"
+      ]
+    },
+    {
+      "operatingsystem": "AlmaLinux",
       "operatingsystemrelease": [
         "8"
       ]

@@ -12,7 +12,7 @@ describe 'fips' do
       context "on #{os}" do
 
         let(:fipscheck_package_name){
-          if facts[:os][:name] == 'RedHat' && facts[:os][:release][:major] == '9'
+          if facts[:os][:family] == 'RedHat' && facts[:os][:release][:major].to_i >= 9
             'libxcrypt'
           else
             'fipscheck'

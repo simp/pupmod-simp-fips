@@ -3,29 +3,31 @@ require 'spec_helper'
 describe 'fips' do
   context 'supported operating systems' do
     on_supported_os.each do |os, os_facts|
-      let(:facts){
+      let(:facts) do
         os_facts.merge({
-        :root_dir_uuid => '123-456-789',
-        :boot_dir_uuid => '123-456-790'
-      }) }
+                         root_dir_uuid: '123-456-789',
+        boot_dir_uuid: '123-456-790'
+                       })
+      end
 
       context "on #{os}" do
-
-        let(:fipscheck_package_name){
+        let(:fipscheck_package_name) do
           if facts[:os][:family] == 'RedHat' && facts[:os][:release][:major].to_i >= 9
             'libxcrypt'
           else
             'fipscheck'
           end
-        }
+        end
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to create_package('nss') }
 
         context 'when_enabling_fips' do
-          let(:params){{
-            :enabled => true
-          }}
+          let(:params) do
+            {
+              enabled: true
+            }
+          end
 
           it { is_expected.to compile.with_all_deps }
           it {
@@ -35,16 +37,17 @@ describe 'fips' do
             is_expected.to create_package('dracut-fips').that_notifies('Exec[dracut_rebuild]')
             is_expected.to create_package(fipscheck_package_name).with_ensure('installed')
           }
-          it { is_expected.to create_kernel_parameter('boot').with_value("UUID=123-456-790") }
+          it { is_expected.to create_kernel_parameter('boot').with_value('UUID=123-456-790') }
           it { is_expected.to create_kernel_parameter('boot').that_notifies('Reboot_notify[fips]') }
           it { is_expected.to create_reboot_notify('fips') }
 
           context 'when boot is not a separate partition' do
-            let(:facts){
+            let(:facts) do
               os_facts.merge({
-              :root_dir_uuid => '123-456-789',
-              :boot_dir_uuid => '123-456-789'
-            }) }
+                               root_dir_uuid: '123-456-789',
+              boot_dir_uuid: '123-456-789'
+                             })
+            end
 
             it { is_expected.to compile.with_all_deps }
             it {
@@ -60,16 +63,18 @@ describe 'fips' do
         end
 
         context 'when_enabling_fips and aes' do
-          let(:facts){
+          let(:facts) do
             os_facts.merge({
-              :cpuinfo => { :processor0 => { :flags => ['aes'] }},
-              :root_dir_uuid => '123-456-789',
-              :boot_dir_uuid => '123-456-790'
-            })
-          }
-          let(:params){{
-            :enabled => true
-          }}
+                             cpuinfo: { processor0: { flags: ['aes'] } },
+              root_dir_uuid: '123-456-789',
+              boot_dir_uuid: '123-456-790'
+                           })
+          end
+          let(:params) do
+            {
+              enabled: true
+            }
+          end
 
           it { is_expected.to compile.with_all_deps }
           it {
@@ -79,42 +84,46 @@ describe 'fips' do
             is_expected.to create_package('dracut-fips-aesni').that_notifies('Exec[dracut_rebuild]')
             is_expected.to create_package(fipscheck_package_name).with_ensure('installed')
           }
-          it { is_expected.to create_kernel_parameter('boot').with_value("UUID=123-456-790") }
+          it { is_expected.to create_kernel_parameter('boot').with_value('UUID=123-456-790') }
           it { is_expected.to create_kernel_parameter('boot').that_notifies('Reboot_notify[fips]') }
           it { is_expected.to create_reboot_notify('fips') }
         end
 
         context 'when_disabling_fips and aes' do
           if os_facts[:os][:release][:major] > '7'
-            let(:simplib__crypto_policy_state){{
-              'global_policy'             => 'DEFAULT',
-              'global_policy_applied'     => true,
-              'global_policies_available' => ['DEFAULT', 'FIPS']
-            }}
+            let(:simplib__crypto_policy_state) do
+              {
+                'global_policy' => 'DEFAULT',
+             'global_policy_applied'     => true,
+             'global_policies_available' => ['DEFAULT', 'FIPS']
+              }
+            end
           else
-            let(:simplib__crypto_policy_state){ nil }
+            let(:simplib__crypto_policy_state) { nil }
           end
 
-          let(:facts){
+          let(:facts) do
             os_facts.merge({
-            :cpuinfo => { :processor0 => { :flags => ['aes'] }},
-            :root_dir_uuid => '123-456-789',
-            :boot_dir_uuid => '123-456-790',
-            :simplib__crypto_policy_state => simplib__crypto_policy_state
-            })
-          }
+                             cpuinfo: { processor0: { flags: ['aes'] } },
+            root_dir_uuid: '123-456-789',
+            boot_dir_uuid: '123-456-790',
+            simplib__crypto_policy_state: simplib__crypto_policy_state
+                           })
+          end
 
-          let(:params){{
-            :enabled => false
-          }}
+          let(:params) do
+            {
+              enabled: false
+            }
+          end
 
-          let(:package_install_state){
+          let(:package_install_state) do
             if os_facts[:os][:release][:major] > '7'
               'installed'
             else
               'absent'
             end
-          }
+          end
 
           it { is_expected.to compile.with_all_deps }
           it {

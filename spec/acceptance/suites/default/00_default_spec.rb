@@ -3,26 +3,26 @@ require 'spec_helper_acceptance'
 test_name 'fips'
 
 describe 'fips' do
-  let(:manifest) {
+  let(:manifest) do
     <<-EOS
       include 'fips'
     EOS
-  }
+  end
 
   hosts.each do |host|
     context 'default parameters and Enable FIPS' do
       # Using puppet_apply as a helper
-      it 'should work with no errors' do
+      it 'works with no errors' do
         set_hieradata_on(host, { 'simp_options::fips' => true })
 
         # Must be FIPS compliant!
         # This is typically set during `simp config`
         on(host, 'puppet config set digest_algorithm sha256')
-        apply_manifest_on(host, manifest, :catch_failures => true)
+        apply_manifest_on(host, manifest, catch_failures: true)
       end
 
-      it 'should require reboot on subsequent run' do
-        result = apply_manifest_on(host, manifest, :catch_failures => true)
+      it 'requires reboot on subsequent run' do
+        result = apply_manifest_on(host, manifest, catch_failures: true)
         expect(result.output).to include('fips => The status of the fips kernel parameter has changed')
 
         munge_ssh_crypto_policies(host)
@@ -34,52 +34,52 @@ describe 'fips' do
         apply_manifest_on(host, manifest)
       end
 
-      it 'should have kernel-level FIPS enabled on reboot' do
+      it 'has kernel-level FIPS enabled on reboot' do
         expect(pfact_on(host, 'fips_enabled')).to be true
       end
 
-      it 'should have the dracut-fips package installed' do
+      it 'has the dracut-fips package installed' do
         result = on(host, 'puppet resource package dracut-fips')
-        expect(result.output).to_not include("ensure => 'absent'")
+        expect(result.output).not_to include("ensure => 'absent'")
       end
 
-      it 'should have the dracut-fips-aesni package installed' do
+      it 'has the dracut-fips-aesni package installed' do
         cpuflags = pfact_on(host, 'cpuinfo.processor0.flags')
 
         if cpuflags.include?('aes')
           result = on(host, 'puppet resource package dracut-fips-aesni')
-          expect(result.output).to_not include("ensure => 'absent'")
+          expect(result.output).not_to include("ensure => 'absent'")
         end
       end
     end
 
     context 'disabling FIPS at the kernel level' do
-      it 'should disable fips' do
+      it 'disables fips' do
         set_hieradata_on(host, { 'simp_options::fips' => false })
-        apply_manifest_on(host, manifest, :catch_failures => true)
+        apply_manifest_on(host, manifest, catch_failures: true)
       end
 
-      it 'should require reboot on subsequent run' do
-        result = apply_manifest_on(host, manifest, :catch_failures => true)
+      it 'requires reboot on subsequent run' do
+        result = apply_manifest_on(host, manifest, catch_failures: true)
         expect(result.output).to include('fips => The status of the fips kernel parameter has changed')
 
         # Reboot to disable fips in the kernel
         host.reboot
       end
 
-      it 'should have kernel-level FIPS disabled on reboot' do
+      it 'has kernel-level FIPS disabled on reboot' do
         expect(pfact_on(host, 'fips_enabled')).to be false
       end
 
       if pfact_on(host, 'os.release.major') > '7'
-        it 'should have the dracut-fips package installed' do
+        it 'has the dracut-fips package installed' do
           result = on(host, 'puppet resource package dracut-fips')
-          expect(result.output).to_not include("ensure => 'absent'")
+          expect(result.output).not_to include("ensure => 'absent'")
         end
       else
-        it 'should not have the dracut-fips package installed' do
+        it 'does not have the dracut-fips package installed' do
           result = on(host, 'puppet resource package dracut-fips')
-          expect(result.output).to match(/ensure\s*=> '(absent|purged)'/)
+          expect(result.output).to match(%r{ensure\s*=> '(absent|purged)'})
         end
       end
     end

@@ -4,7 +4,7 @@ test_name 'fips'
 
 describe 'fips' do
   let(:manifest) do
-    <<-EOS
+    <<~EOS
       include 'fips'
     EOS
   end

@@ -4,10 +4,10 @@ describe 'fips' do
   context 'supported operating systems' do
     on_supported_os.each do |os, os_facts|
       let(:facts) do
-        os_facts.merge({
-                         root_dir_uuid: '123-456-789',
-        boot_dir_uuid: '123-456-790'
-                       })
+        os_facts.merge(
+          root_dir_uuid: '123-456-789',
+          boot_dir_uuid: '123-456-790',
+        )
       end
 
       context "on #{os}" do
@@ -25,7 +25,7 @@ describe 'fips' do
         context 'when_enabling_fips' do
           let(:params) do
             {
-              enabled: true
+              enabled: true,
             }
           end
 
@@ -43,10 +43,10 @@ describe 'fips' do
 
           context 'when boot is not a separate partition' do
             let(:facts) do
-              os_facts.merge({
-                               root_dir_uuid: '123-456-789',
-              boot_dir_uuid: '123-456-789'
-                             })
+              os_facts.merge(
+                root_dir_uuid: '123-456-789',
+                boot_dir_uuid: '123-456-789',
+              )
             end
 
             it { is_expected.to compile.with_all_deps }
@@ -64,15 +64,15 @@ describe 'fips' do
 
         context 'when_enabling_fips and aes' do
           let(:facts) do
-            os_facts.merge({
-                             cpuinfo: { processor0: { flags: ['aes'] } },
+            os_facts.merge(
+              cpuinfo: { processor0: { flags: ['aes'] } },
               root_dir_uuid: '123-456-789',
-              boot_dir_uuid: '123-456-790'
-                           })
+              boot_dir_uuid: '123-456-790',
+            )
           end
           let(:params) do
             {
-              enabled: true
+              enabled: true,
             }
           end
 
@@ -93,9 +93,9 @@ describe 'fips' do
           if os_facts[:os][:release][:major] > '7'
             let(:simplib__crypto_policy_state) do
               {
-                'global_policy' => 'DEFAULT',
-             'global_policy_applied'     => true,
-             'global_policies_available' => ['DEFAULT', 'FIPS']
+                'global_policy'             => 'DEFAULT',
+                'global_policy_applied'     => true,
+                'global_policies_available' => ['DEFAULT', 'FIPS'],
               }
             end
           else
@@ -103,17 +103,17 @@ describe 'fips' do
           end
 
           let(:facts) do
-            os_facts.merge({
-                             cpuinfo: { processor0: { flags: ['aes'] } },
-            root_dir_uuid: '123-456-789',
-            boot_dir_uuid: '123-456-790',
-            simplib__crypto_policy_state: simplib__crypto_policy_state
-                           })
+            os_facts.merge(
+              cpuinfo: { processor0: { flags: ['aes'] } },
+              root_dir_uuid: '123-456-789',
+              boot_dir_uuid: '123-456-790',
+              simplib__crypto_policy_state: simplib__crypto_policy_state,
+            )
           end
 
           let(:params) do
             {
-              enabled: false
+              enabled: false,
             }
           end
 

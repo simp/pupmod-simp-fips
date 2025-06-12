@@ -1,3 +1,8 @@
+* Thu Jun 12 2025 Steven Pritchard <steve@sicura.us> - 0.10.0
+- Clean up for rubocop
+- Support simp-crypto_policy 1.x (#78)
+- Drop call to `simplib::assert_metadata()`
+
 * Mon Oct 23 2023 Steven Pritchard <steve@sicura.us> - 0.9.0
 - Advertise EL9 support in metadata
 

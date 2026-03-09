@@ -1,6 +1,6 @@
 {
   "name": "simp-fips",
-  "version": "0.10.0",
+  "version": "1.0.0",
   "author": "SIMP Team",
   "summary": "A SIMP module for managing FIPS",
   "license": "Apache-2.0",
@@ -29,7 +29,7 @@
     "optional_dependencies": [
       {
         "name": "simp/crypto_policy",
-        "version_requirement": ">= 0.1.4 < 2.0.0"
+        "version_requirement": ">= 0.1.4 < 3.0.0"
       }
     ]
   },
@@ -43,39 +43,40 @@
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
-        "7",
-        "8",
-        "9"
+        "9",
+        "10"
       ]
     },
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
-        "7",
         "8",
-        "9"
+        "9",
+        "10"
       ]
     },
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
-        "7",
         "8",
-        "9"
+        "9",
+        "10"
       ]
     },
     {
       "operatingsystem": "Rocky",
       "operatingsystemrelease": [
         "8",
-        "9"
+        "9",
+        "10"
       ]
     },
     {
       "operatingsystem": "AlmaLinux",
       "operatingsystemrelease": [
         "8",
-        "9"
+        "9",
+        "10"
       ]
     }
   ],

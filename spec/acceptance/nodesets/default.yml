@@ -1,6 +1,6 @@
 ---
 HOSTS:
-  puppet.el8:
+  puppet.el9:
     roles:
     - default
     platform: el-9-x86_64

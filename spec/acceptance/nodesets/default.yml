@@ -4,7 +4,7 @@ HOSTS:
     roles:
     - default
     platform: el-9-x86_64
-    box: generic/centos9
+    box: generic/centos9s
     hypervisor: "<%= ENV.fetch('BEAKER_HYPERVISOR', 'vagrant') %>"
     vagrant_memsize: 4608
     vagrant_cpus: 2

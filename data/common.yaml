@@ -1,1 +1,1 @@
-fips::fipscheck_package_name: 'fipscheck'
+fips::fipscheck_package_name: 'libxcrypt'

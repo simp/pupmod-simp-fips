@@ -1,3 +1,7 @@
+* Mon Mar 09 2026 Mike Riddle <mike@sicura.us> - 1.0.0
+- Removed el7 support
+- Added el10 support
+
 * Thu Jan 15 2026 Steven Pritchard <steve@sicura.us> - 0.11.0
 - Support simp-crypto_policy 2.x
 - Support simp-simplib 5.x

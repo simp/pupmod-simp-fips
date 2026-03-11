@@ -71,16 +71,9 @@ describe 'fips' do
         expect(pfact_on(host, 'fips_enabled')).to be false
       end
 
-      if pfact_on(host, 'os.release.major') > '7'
-        it 'has the dracut-fips package installed' do
-          result = on(host, 'puppet resource package dracut-fips')
-          expect(result.output).not_to include("ensure => 'absent'")
-        end
-      else
-        it 'does not have the dracut-fips package installed' do
-          result = on(host, 'puppet resource package dracut-fips')
-          expect(result.output).to match(%r{ensure\s*=> '(absent|purged)'})
-        end
+      it 'has the dracut-fips package installed' do
+        result = on(host, 'puppet resource package dracut-fips')
+        expect(result.output).not_to include("ensure => 'absent'")
       end
     end
   end

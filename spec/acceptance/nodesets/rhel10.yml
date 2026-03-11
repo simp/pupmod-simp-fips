@@ -24,9 +24,8 @@ HOSTS:
       - |
         dnf -y install dnf-plugins-core
         dnf config-manager --set-enabled codeready-builder-for-rhel-10-x86_64-rpms
-    # There are not currently any el10 images available on google cloud
-    # family: rhel-cloud/rhel-10
-    # gce_machine_type: n1-standard-2
+    family: rhel-cloud/rhel-10
+    gce_machine_type: n1-standard-2
 CONFIG:
   validate: false
   log_level: verbose

@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "source": "https://github.com/simp/pupmod-simp-fips",
   "project_page": "https://github.com/simp/pupmod-simp-fips",
-  "issues_url": "https://simp-project.atlassian.net",
+  "issues_url": "https://github.com/simp/pupmod-simp-fips/issues",
   "tags": [
     "simp",
     "fips"
@@ -22,7 +22,7 @@
     },
     {
       "name": "puppet/augeasproviders_grub",
-      "version_requirement": ">= 3.1.0 < 6.0.0"
+      "version_requirement": ">= 3.1.0 < 7.0.0"
     }
   ],
   "simp": {
@@ -34,12 +34,6 @@
     ]
   },
   "operatingsystem_support": [
-    {
-      "operatingsystem": "Amazon",
-      "operatingsystemrelease": [
-        "2"
-      ]
-    },
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
@@ -82,8 +76,8 @@
   ],
   "requirements": [
     {
-      "name": "puppet",
-      "version_requirement": ">= 7.0.0 < 9.0.0"
+      "name": "openvox",
+      "version_requirement": ">= 8.0.0 < 9.0.0"
     }
   ]
 }

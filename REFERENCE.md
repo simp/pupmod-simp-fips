@@ -41,6 +41,8 @@ Data type: `String`
 The name of the package that provides the
 fipscheck binary
 
+Default value: `'libxcrypt'`
+
 ##### <a name="-fips--enabled"></a>`enabled`
 
 Data type: `Boolean`

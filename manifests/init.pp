@@ -32,7 +32,7 @@
 #
 class fips (
   String  $fipscheck_package_name,
-  Boolean $enabled          = simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled']}),
+  Boolean $enabled          = simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled'] }),
   Boolean $aesni            = ($facts['cpuinfo'] and member($facts['cpuinfo']['processor0']['flags'], 'aes')),
   String  $dracut_ensure    = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
   String  $fipscheck_ensure = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),

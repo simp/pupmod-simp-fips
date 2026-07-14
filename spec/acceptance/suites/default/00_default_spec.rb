@@ -10,6 +10,28 @@ describe 'fips' do
   end
 
   hosts.each do |host|
+    # Exercise noop from a clean state: on a fresh node the Sicura console
+    # previews the module with `puppet apply --noop`, which must not error. This
+    # runs first, before FIPS is enabled, the digest algorithm is changed, or
+    # the host is rebooted below -- so it is the genuine fresh-node preview.
+    # Real behaviour (enabling FIPS, reboot, idempotence) is covered by the
+    # applies that follow. A post-convergence noop check is deliberately
+    # omitted: `puppet apply --noop --detailed-exitcodes` always exits 0.
+    #
+    # Unlike other modules in this rollout, there is no `before` package
+    # removal: fips has no single managed package whose removal represents a
+    # fresh node -- when FIPS is off (the clean-node default) it ensures
+    # `dracut-fips` *absent* already, and `nss`/the fipscheck package are base
+    # packages with dependents that cannot be removed. The value here is
+    # confirming `include 'fips'` compiles and evaluates under --noop without
+    # error (kernel_parameter, reboot_notify, and the refreshonly dracut exec
+    # are all noop-safe), which is exactly what the console preview needs.
+    context 'in noop mode from a clean state' do
+      it 'applies without errors in noop mode' do
+        apply_manifest_on(host, manifest, catch_failures: true, noop: true)
+      end
+    end
+
     context 'default parameters and Enable FIPS' do
       # Using puppet_apply as a helper
       it 'works with no errors' do

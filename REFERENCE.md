@@ -53,7 +53,7 @@ If FIPS should be enabled or disabled on the system.
   a system, this module mirrors the existing status of FIPS on the system
   to which it is applied.
 
-Default value: `simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled']})`
+Default value: `simplib::lookup('simp_options::fips', { 'default_value' => $facts['fips_enabled'] })`
 
 ##### <a name="-fips--aesni"></a>`aesni`
 

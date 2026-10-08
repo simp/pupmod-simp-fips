@@ -88,4 +88,3 @@ Data type: `String`
 The ensure status of the nss package
 
 Default value: `simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })`
-
